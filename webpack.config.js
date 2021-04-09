@@ -17,7 +17,7 @@ const publicPath = '/'
 
 const src = path.resolve(__dirname, 'src')
 const dist = path.resolve(__dirname, 'build')
-const backendProxyURL = process.env.BACKEND_URL ?? 'localhost'
+const backendProxyURL = process.env.BACKEND_URL ?? 'http://localhost:8000/'
 
 
 module.exports = {
