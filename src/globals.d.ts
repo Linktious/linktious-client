@@ -1,6 +1,4 @@
 /* eslint-disable no-unused-vars */
-// This file corellates directly to `settings.js` file injectedVars - for define plugin
-
 type WebpackConfig = {
 }
 type AvailableEnvs = 'production' | 'development'
