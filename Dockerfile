@@ -1,7 +1,7 @@
 #
 # ---- Base build ----
 #
-FROM node:14 as base
+FROM node:14.16.1 as base
 
 WORKDIR /app
 ADD . /app
