@@ -81,7 +81,7 @@ module.exports = {
     hot: true,
     historyApiFallback: true, // for SPA
     proxy: {
-      '/api': backendProxyURL,
+      '/api': {target: backendProxyURL, pathRewrite: {'^/api': ''}},
     },
   },
   module: {
