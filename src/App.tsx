@@ -5,6 +5,7 @@ import {Route, BrowserRouter, Switch} from 'react-router-dom'
 import {ThemeProvider} from 'styled-components'
 import theme, {GlobalStyle} from '~/Theme'
 
+
 const App = () => {
   return (
     <BrowserRouter>
