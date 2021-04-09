@@ -7,7 +7,6 @@
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
     "module": "commonjs",
-    "sourceMap": true,
     // Process & infer types from .js files.
     "allowJs": true,
     // Don't emit; allow Babel to transform files.
@@ -16,6 +15,8 @@
     "strict": true,
     // Disallow features that require cross-file information for emit.
     "isolatedModules": true,
+    "rootDir": ".",
+    "sourceMap": true,
     // Import non-ES modules as default imports.
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -26,7 +27,7 @@
     }
   },
   // Import custom typings
-  "include": ["src/**/*"],
+  "include": ["./src/**/*"],
   "exclude": [
     "./node_modules/**/*"
   ]

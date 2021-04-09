@@ -8,10 +8,9 @@ import theme, {GlobalStyle} from '~/Theme'
 
 
 const App = () => {
-
   useEffect(() => {
     axios.get('/api/')
-  }, [])  
+  }, [])
   return (
     <BrowserRouter>
       <Switch>
@@ -25,8 +24,8 @@ const App = () => {
 const ProvidedApp = () => (
   <ThemeProvider theme={theme}>
     <ReduxProvider store={store}>
-        <GlobalStyle/>
-        <App/>
+      <GlobalStyle/>
+      <App/>
     </ReduxProvider>
   </ThemeProvider>
 )
