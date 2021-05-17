@@ -8,6 +8,7 @@ import theme, { GlobalStyle } from '~/Theme'
 import {
   userLogin,
 } from '~/features/users'
+import Boards from '~/features/boards'
 import { useAppDispatch } from '~/store/hooks'
 
 
@@ -25,6 +26,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Switch>
+        <Route path="/boards" render={() => <Boards />}/>
         <Route path="/" render={() => <div>render</div>}/>
       </Switch>
     </BrowserRouter>

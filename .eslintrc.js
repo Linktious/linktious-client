@@ -37,7 +37,7 @@ module.exports = {
     'brace-style': 'off',
     'semi': ['error', 'never'],
     'module-resolver/use-alias': 'error',
-    'indent': 'off',
+    'indent': ['error', 2],
     '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1, 'ignoredNodes': ['JSXAttribute', 'JSXSpreadAttribute']}],
     'func-call-spacing': 'off',
     '@typescript-eslint/func-call-spacing': ['error'],
@@ -53,5 +53,6 @@ module.exports = {
         'next': '*',
       },
     ],
+    'linebreak-style': 0,
   },
 }
