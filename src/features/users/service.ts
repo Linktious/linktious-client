@@ -2,7 +2,7 @@ import ApiClient from '~/apiClient'
 import * as types from './types'
 
 
-class Service {
+class UserService {
   async login(userCredentials: types.UserCredentials): Promise<types.User> {
     const user = (await ApiClient.post<types.UserResponse>('/users/login', userCredentials)).data
 
@@ -63,4 +63,4 @@ class Service {
 }
 
 
-export default new Service()
+export default new UserService()

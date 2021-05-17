@@ -27,10 +27,10 @@ module.exports = {
     '@typescript-eslint',
   ],
   'rules': {
-    'max-len': ['error', {'code': 140}],
+    'max-len': ['error', { 'code': 140 }],
     'react/prop-types': 'off',
     'react/no-unescaped-entities': 'off',
-    'object-curly-spacing': ['error', 'never'],
+    'object-curly-spacing': ['error', 'always', { arraysInObjects: false }],
     'require-jsdoc': 'off',
     'guard-for-in': 'off',
     'no-invalid-this': 'off',
@@ -38,13 +38,13 @@ module.exports = {
     'semi': ['error', 'never'],
     'module-resolver/use-alias': 'error',
     'indent': 'off',
-    '@typescript-eslint/indent': ['error', 2, {'SwitchCase': 1, 'ignoredNodes': ['JSXAttribute', 'JSXSpreadAttribute']}],
+    '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1, 'ignoredNodes': ['JSXAttribute', 'JSXSpreadAttribute']}],
     'func-call-spacing': 'off',
     '@typescript-eslint/func-call-spacing': ['error'],
     'react/jsx-indent-props': ['error', 'first'],
     'import/no-anonymous-default-export': 'error',
     '@typescript-eslint/strict-boolean-expressions': [0],
-    'lines-between-class-members': ['error', 'always', {'exceptAfterSingleLine': true}],
+    'lines-between-class-members': ['error', 'always', { 'exceptAfterSingleLine': true }],
     'padding-line-between-statements': [
       'error',
       {

@@ -1,5 +1,5 @@
 const path = require('path')
-const {globalVars, isDevelopment} = require('./globalVars')
+const { globalVars, isDevelopment } = require('./globalVars')
 const webpack = require('webpack')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -7,7 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
-const {WebpackManifestPlugin} = require('webpack-manifest-plugin')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 
@@ -81,7 +81,7 @@ module.exports = {
     hot: true,
     historyApiFallback: true, // for SPA
     proxy: {
-      '/api': {target: backendProxyURL, pathRewrite: {'^/api': ''}},
+      '/api': { target: backendProxyURL, pathRewrite: { '^/api': '' } },
     },
   },
   module: {
@@ -93,7 +93,7 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         options: {
           plugins: [
-            isDevelopment && ['react-refresh/babel', {skipEnvCheck: true}],
+            isDevelopment && ['react-refresh/babel', { skipEnvCheck: true }],
           ].filter(Boolean),
         },
       },

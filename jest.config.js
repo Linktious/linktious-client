@@ -3,7 +3,6 @@
  * https://jestjs.io/docs/en/configuration.html
  */
 
-const {globalVars} = require('./globalVars')
 
 module.exports = {
   // All imported modules in your tests should be mocked automatically

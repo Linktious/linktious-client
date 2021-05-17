@@ -3,7 +3,7 @@ import usersReducer from '~/features/users/slice'
 
 
 const rootReducer = combineReducers({
-    users: usersReducer,
+  users: usersReducer,
 })
 
 
