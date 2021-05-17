@@ -9,6 +9,7 @@ import {
   userLogin,
 } from '~/features/users'
 import Boards from '~/features/boards'
+import Link from '~/features/links'
 import { useAppDispatch } from '~/store/hooks'
 
 
@@ -27,6 +28,7 @@ const App = () => {
     <BrowserRouter>
       <Switch>
         <Route path="/boards" render={() => <Boards />}/>
+        <Route path="/link" render={() => <Link />}/>
         <Route path="/" render={() => <div>render</div>}/>
       </Switch>
     </BrowserRouter>

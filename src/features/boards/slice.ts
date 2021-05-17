@@ -25,9 +25,7 @@ const initialState = {
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchBoards.fulfilled, (state, action) => {
       state.boards = action.payload
