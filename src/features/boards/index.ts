@@ -2,7 +2,7 @@ import BoardService from './service'
 import {
   fetchBoards,
 } from './slice'
-import Boards from './Boards'
+import Board from './Board'
 
 
 export {
@@ -10,4 +10,4 @@ export {
   fetchBoards,
 }
 
-export default Boards
+export default Board

@@ -1,4 +1,5 @@
-import { createGlobalStyle, DefaultTheme } from 'styled-components'
+import { createMuiTheme } from '@material-ui/core/styles'
+import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #root {
@@ -9,12 +10,6 @@ export const GlobalStyle = createGlobalStyle`
   }
 `
 
-const theme: DefaultTheme = {
-
-}
-
-export interface ThemeProps {
-  theme: DefaultTheme
-}
+const theme = createMuiTheme({})
 
 export default theme

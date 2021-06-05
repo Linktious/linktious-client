@@ -39,3 +39,6 @@ export const { } = linksSlice.actions
 export default linksSlice.reducer
 
 export const selectAllLinks = (state: RootState) => state.links.links
+export const selectLinkById = (linkId: number) => (state: RootState) => selectAllLinks(state).find((link) => link.id === linkId)
+export const selectLinksByLabels = (labelsIds: number[]) => (state: RootState) => selectAllLinks(state)
+  .filter((link) => link.labels.some((labelId) => labelsIds.includes(labelId)))

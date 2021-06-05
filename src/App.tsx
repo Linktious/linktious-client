@@ -1,34 +1,49 @@
-import React, { useEffect } from 'react'
-import store from '~/store'
-import axios from 'axios'
-import { Provider as ReduxProvider } from 'react-redux'
+import React, { useEffect, useState } from 'react'
 import { Route, BrowserRouter, Switch } from 'react-router-dom'
+import { Provider as ReduxProvider } from 'react-redux'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
 import { ThemeProvider } from 'styled-components'
-import theme, { GlobalStyle } from '~/Theme'
-import {
-  userLogin,
-} from '~/features/users'
-import Boards from '~/features/boards'
-import Link from '~/features/links'
+import store from '~/store'
 import { useAppDispatch } from '~/store/hooks'
+import theme, { GlobalStyle } from '~/Theme'
+import { userLogin } from '~/features/users'
+import Board, { fetchBoards } from '~/features/boards'
+import Link, { fetchLinks } from '~/features/links'
+import { fetchLabels } from '~/features/labels'
 
 
 const App = () => {
   const dispatch = useAppDispatch()
+  const [loading, setLoading] = useState<boolean>(true)
 
-  useEffect(() => {
-    axios.get('/api/')
-    dispatch(userLogin({
+  const fetchData = async () => {
+    await dispatch(userLogin({
       email: 'user@email.com',
       password: '12345678',
     }))
+    await dispatch(fetchBoards())
+    await dispatch(fetchLinks())
+    await dispatch(fetchLabels())
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    fetchData().then(() => console.log('Fetched data!'))
   }, [dispatch])
+
+  if (loading) {
+    return (
+      <div>Loading....</div>
+    )
+  }
 
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/boards" render={() => <Boards />}/>
-        <Route path="/link" render={() => <Link />}/>
+        <Route path="/boards" render={() => <Board boardId={1} />}/>
+        <Route path="/link" render={() => <Link linkId={1} />}/>
         <Route path="/" render={() => <div>render</div>}/>
       </Switch>
     </BrowserRouter>
@@ -37,12 +52,15 @@ const App = () => {
 
 
 const ProvidedApp = () => (
-  <ThemeProvider theme={theme}>
-    <ReduxProvider store={store}>
-      <GlobalStyle/>
-      <App/>
-    </ReduxProvider>
-  </ThemeProvider>
+  <MuiThemeProvider theme={theme}>
+    <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <ReduxProvider store={store}>
+        <GlobalStyle/>
+        <App/>
+      </ReduxProvider>
+    </ThemeProvider>
+  </MuiThemeProvider>
 )
 
 
