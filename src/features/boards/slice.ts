@@ -38,7 +38,7 @@ export const { } = boardsSlice.actions
 
 export default boardsSlice.reducer
 
-// TODO: used reselect
+// TODO: use reselect
 export const selectAllBoards = (state: RootState) => state.boards.boards
 // TODO: use previous selector to get boards
 export const selectBoardById = (boardId: number) => (state: RootState) => state.boards.boards.find((board) => board.id === boardId)

@@ -18,13 +18,15 @@ const App = () => {
   const [loading, setLoading] = useState<boolean>(true)
 
   const fetchData = async () => {
-    await dispatch(userLogin({
-      email: 'user@email.com',
-      password: '12345678',
-    }))
-    await dispatch(fetchBoards())
-    await dispatch(fetchLinks())
-    await dispatch(fetchLabels())
+    await Promise.all([
+      dispatch(userLogin({
+        email: 'user@email.com',
+        password: '12345678',
+      })),
+      dispatch(fetchBoards()),
+      dispatch(fetchLinks()),
+      dispatch(fetchLabels()),
+    ])
     setLoading(false)
   }
 
@@ -42,8 +44,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/boards" render={() => <Board boardId={1} />}/>
-        <Route path="/link" render={() => <Link linkId={1} />}/>
+        <Route path="/boards" render={() => <Board boardId={1}/>}/>
+        <Route path="/link" render={() => <Link linkId={1}/>}/>
         <Route path="/" render={() => <div>render</div>}/>
       </Switch>
     </BrowserRouter>
@@ -53,7 +55,7 @@ const App = () => {
 
 const ProvidedApp = () => (
   <MuiThemeProvider theme={theme}>
-    <CssBaseline />
+    <CssBaseline/>
     <ThemeProvider theme={theme}>
       <ReduxProvider store={store}>
         <GlobalStyle/>
