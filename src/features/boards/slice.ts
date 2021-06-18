@@ -1,6 +1,6 @@
 import {
   createSlice,
-  createAsyncThunk,
+  createAsyncThunk, PayloadAction,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import BoardService from './service'
@@ -15,17 +15,23 @@ export const fetchBoards = createAsyncThunk<types.Board[]>(
 )
 
 interface BoardsState {
-  boards: types.Board[]
+  boards: types.Board[],
+  searchLinksWord: string,
 }
 
 const initialState = {
   boards: [],
+  searchLinksWord: '',
 } as BoardsState
 
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {},
+  reducers: {
+    searchLinks(state, action: PayloadAction<string>) {
+      state.searchLinksWord = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchBoards.fulfilled, (state, action) => {
       state.boards = action.payload
@@ -34,7 +40,7 @@ export const boardsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = boardsSlice.actions
+export const { searchLinks } = boardsSlice.actions
 
 export default boardsSlice.reducer
 
@@ -42,3 +48,4 @@ export default boardsSlice.reducer
 export const selectAllBoards = (state: RootState) => state.boards.boards
 // TODO: use previous selector to get boards
 export const selectBoardById = (boardId: number) => (state: RootState) => state.boards.boards.find((board) => board.id === boardId)
+export const selectSearchLinks = () => (state: RootState) => state.boards.searchLinksWord

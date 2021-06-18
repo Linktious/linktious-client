@@ -28,7 +28,10 @@ export const labelsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchLabels.fulfilled, (state, action) => {
-      state.labels = action.payload
+      state.labels = action.payload.map((label) => ({
+        ...label,
+        backgroundColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+      }))
     })
   },
 })

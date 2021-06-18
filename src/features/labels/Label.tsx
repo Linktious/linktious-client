@@ -14,25 +14,29 @@ const ColoredLabel = styled.span<ColoredLabelProps>`
   background-color: ${({ backgroundColor = 'red' }) => backgroundColor};
   font-family: monospace;
   font-size: ${({ fontSize = 'medium' }) => fontSize};
+  border-radius: 4px;
+  padding: 2px 4px;
 `
 
 interface LabelProps {
   labelId: number
-  backgroundColor: string
+  backgroundColor?: string
   className?: string
+  key?: any
 }
 
 const Label = (props: LabelProps) => {
-  const { className, labelId, backgroundColor = 'red' } = props
+  const { className, labelId } = props
   const label = useAppSelector(selectLabelById(labelId))
+  if (!label) return null
   console.log(label)
 
   return (
     <ColoredLabel
       className={className}
-      backgroundColor={backgroundColor}
+      backgroundColor={label.backgroundColor}
     >
-      {label?.name}
+      {label.name}
     </ColoredLabel>
   )
 }

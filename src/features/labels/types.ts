@@ -13,4 +13,5 @@ export interface Label {
   name: string,
   createdAt: Date,
   createdByUserId: number,
+  backgroundColor?: string,
 }

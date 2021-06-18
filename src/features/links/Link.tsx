@@ -107,7 +107,9 @@ const Link = (props: LinkProps) => {
               title={<LabelTooltipTitle>{label.name}</LabelTooltipTitle>}
               arrow={true}
             >
-              <LinkLabel />
+              <LinkLabel
+                backgroundColor={label.backgroundColor}
+              />
             </Tooltip>
           ))
         }

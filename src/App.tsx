@@ -16,14 +16,20 @@ import { fetchLabels } from '~/features/labels'
 const Root = styled.div`
   height: 100%;
   width: 100%;
+  overflow: hidden;
   flex: 1;
   display: flex;
 `
 
 const Content = styled.div`
+  width: 100%;
   flex: 1;
   display: flex;
   margin: 16px;
+`
+
+const BoardWithLayout = styled(Board)`
+  flex: 3;
 `
 
 const App = () => {
@@ -58,7 +64,7 @@ const App = () => {
     <Content>
       <BrowserRouter>
         <Switch>
-          <Route path="/board" render={() => <Board boardId={1}/>}/>
+          <Route path="/board" render={() => <BoardWithLayout boardId={1}/>}/>
           <Route path="/link" render={() => <Link linkId={1}/>}/>
           <Route path="/" render={() => <div>render</div>}/>
         </Switch>
