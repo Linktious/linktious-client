@@ -9,14 +9,14 @@ import { RootState } from '~/store/rootReducer'
 
 export const userLogin = createAsyncThunk<types.User, types.UserCredentials, { state: RootState }>(
   'users/login',
-  async (userCredentials: types.UserCredentials) => {
+  async (userCredentials) => {
     return await UserService.login(userCredentials)
   },
 )
 
 export const setUserMainBoard = createAsyncThunk<types.User, number, { state: RootState, rejectValue: string }>(
   'users/setUserMainBoard',
-  async (boardId: number, { getState, rejectWithValue }) => {
+  async (boardId, { getState, rejectWithValue }) => {
     const authenticatedUser = getState().users.authenticatedUser
     if (authenticatedUser === null) {
       return rejectWithValue('User is not authenticated')
@@ -29,7 +29,7 @@ export const setUserMainBoard = createAsyncThunk<types.User, number, { state: Ro
 
 export const setUserFavoriteBoards = createAsyncThunk<types.User, number[], { state: RootState, rejectValue: string }>(
   'users/setUserFavoriteBoards',
-  async (boardsIds: number[], { getState, rejectWithValue }) => {
+  async (boardsIds, { getState, rejectWithValue }) => {
     const authenticatedUser = getState().users.authenticatedUser
     if (authenticatedUser === null) {
       return rejectWithValue('User is not authenticated')
@@ -42,7 +42,7 @@ export const setUserFavoriteBoards = createAsyncThunk<types.User, number[], { st
 
 export const fetchUserInfo = createAsyncThunk<types.UserBasicInfo, number>(
   'users/fetchUserInfo',
-  async (userId: number) => {
+  async (userId) => {
     return await UserService.getUserBasicInfo(userId)
   },
 )
@@ -89,3 +89,6 @@ export const usersSlice = createSlice({
 export const { } = usersSlice.actions
 
 export default usersSlice.reducer
+
+export const getUserById = (userId: number) => (state: RootState) => state.users.users[userId]
+
