@@ -16,6 +16,7 @@ const ColoredLabel = styled.span<ColoredLabelProps>`
   font-size: ${({ fontSize = 'medium' }) => fontSize};
   border-radius: 4px;
   padding: 2px 4px;
+  width: fit-content;
 `
 
 interface LabelProps {
