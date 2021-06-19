@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import {IconButton, InputAdornment, InputBase} from '@material-ui/core'
+import { IconButton, InputAdornment, InputBase } from '@material-ui/core'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import { searchLinks, selectSearchLinks } from '~/features/boards/slice'
 import SearchIcon from '@material-ui/icons/Search'
