@@ -2,13 +2,18 @@ import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import LocalOfferIcon from '@material-ui/icons/LocalOffer'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
-import { selectBoardById, setBoardLabelsFilters } from '~/features/boards/slice'
+import {
+  searchLabels,
+  selectBoardById,
+  selectSearchLabels,
+  setBoardLabelsFilters,
+} from '~/features/boards/slice'
 import { Checkbox, FormControlLabel, FormGroup, IconButton, InputAdornment, InputBase } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import ClearIcon from '@material-ui/icons/Clear'
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import Card from '@material-ui/core/Card'
-import { selectAllLabels } from '~/features/labels/slice'
+import { selectLabelsFilteredBySearchWord } from '~/features/labels/slice'
 import Label from '~/features/labels'
 import { fetchUserInfo, getUserById } from '~/features/users/slice'
 
@@ -93,10 +98,24 @@ interface SearchLabelsProps {
 
 const SearchLabels = (props: SearchLabelsProps) => {
   const { className } = props
+
+  const dispatch = useAppDispatch()
+  const searchLabelsWord = useAppSelector(selectSearchLabels())
+
+  const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(searchLabels(event.target.value))
+  }, [dispatch])
+
+  const onClearSearch = useCallback(() => {
+    dispatch(searchLabels(''))
+  }, [dispatch])
+
   return (
     <SearchInput
       className={className}
-      id="search-board"
+      id="search-label"
+      value={searchLabelsWord}
+      onChange={onSearch}
       placeholder="Search..."
       startAdornment={
         <InputAdornment position="start">
@@ -105,7 +124,7 @@ const SearchLabels = (props: SearchLabelsProps) => {
       }
       endAdornment={
         <InputAdornment position="end">
-          <IconButton onClick={() => {}}>
+          <IconButton onClick={onClearSearch}>
             <ClearIcon color="disabled"/>
           </IconButton>
         </InputAdornment>
@@ -121,10 +140,13 @@ const LabelsIcon = styled(LocalOfferIcon)`
   margin-right: 8px;
 `
 
+const BoardLabelsContent = styled.div`
+  margin: 4px 36px 0 36px;
+`
+
 const LabelsCard = styled(Card)`
   height: 400px;
   border-radius: 14px;
-  margin: 4px 8px 0 0;
   background: #f4f3f35c;
   
   display: flex;
@@ -141,18 +163,17 @@ const LabelCheckbox = styled(Checkbox)`
   padding: 0 !important;
 `
 
-const BoardLabelsContent = styled.div`
-  margin-left: 36px;
-`
-
 interface BoardLabelsProps {
   boardId: number
   labels: number[]
   boardLabels: number[]
 }
 
-const BoardLabels = ({ boardId, labels, boardLabels }: BoardLabelsProps) => {
+const BoardLabels = (props: BoardLabelsProps) => {
+  const { boardId, labels, boardLabels } = props
+
   const dispatch = useAppDispatch()
+
   const onLabelCheckboxClick = useCallback((selectedLabelId: number, event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target
     let updatedLabels
@@ -168,6 +189,7 @@ const BoardLabels = ({ boardId, labels, boardLabels }: BoardLabelsProps) => {
       labelsFilters: updatedLabels,
     }))
   }, [boardLabels])
+
   return (
     <Section
       title="Board Labels"
@@ -286,11 +308,13 @@ interface BoardInfoProps {
 
 const BoardInfo = (props: BoardInfoProps) => {
   const { boardId, className } = props
+
   const dispatch = useAppDispatch()
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
   const userInfo = useAppSelector(getUserById(board.createdByUserId))
-  const labels = useAppSelector(selectAllLabels)
+  const searchLabelsWord = useAppSelector(selectSearchLabels())
+  const labels = useAppSelector(selectLabelsFilteredBySearchWord(searchLabelsWord))
 
   useEffect(() => {
     if (userInfo === undefined) {
@@ -324,6 +348,5 @@ const BoardInfo = (props: BoardInfoProps) => {
     </RootDiv>
   )
 }
-
 
 export default BoardInfo

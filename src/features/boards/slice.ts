@@ -29,11 +29,13 @@ export const setBoardLabelsFilters = createAsyncThunk<types.Board, setBoardLabel
 interface BoardsState {
   boards: types.Board[],
   searchLinksWord: string,
+  searchLabelsWord: string,
 }
 
 const initialState = {
   boards: [],
   searchLinksWord: '',
+  searchLabelsWord: '',
 } as BoardsState
 
 export const boardsSlice = createSlice({
@@ -42,6 +44,9 @@ export const boardsSlice = createSlice({
   reducers: {
     searchLinks(state, action: PayloadAction<string>) {
       state.searchLinksWord = action.payload
+    },
+    searchLabels(state, action: PayloadAction<string>) {
+      state.searchLabelsWord = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -57,7 +62,7 @@ export const boardsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { searchLinks } = boardsSlice.actions
+export const { searchLinks, searchLabels } = boardsSlice.actions
 
 export default boardsSlice.reducer
 
@@ -66,3 +71,4 @@ export const selectAllBoards = (state: RootState) => state.boards.boards
 // TODO: use previous selector to get boards
 export const selectBoardById = (boardId: number) => (state: RootState) => state.boards.boards.find((board) => board.id === boardId)
 export const selectSearchLinks = () => (state: RootState) => state.boards.searchLinksWord
+export const selectSearchLabels = () => (state: RootState) => state.boards.searchLabelsWord

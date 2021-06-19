@@ -45,3 +45,4 @@ export const selectAllLabels = (state: RootState) => state.labels.labels
 export const selectLabelById = (labelId: number) => (state: RootState) => selectAllLabels(state).find((label) => label.id === labelId)
 export const selectLabelsByIds = (labelsIds: number[]) => (state: RootState) => selectAllLabels(state)
   .filter((label) => labelsIds.includes(label.id))
+export const selectLabelsFilteredBySearchWord = (searchWord: string) => (state: RootState) => selectAllLabels(state).filter((label) => label.name.toLowerCase().includes(searchWord.toLowerCase()))
