@@ -25,6 +25,8 @@ const BoardContent = styled.div`
 `
 
 const BoardInfoWithLayout = styled(BoardInfo)`
+  min-width: 350px;
+  
   flex: 1;
   border-left: 1px solid #c5c5c5a8;
 `
@@ -56,17 +58,11 @@ const LabelContainer = styled.div`
   margin-left: 8px;
 `
 
-const LinksContainer = styled.div`
-  margin-top: 16px;
-  overflow-y: scroll;
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-content: flex-start;
-  justify-content: flex-start;
+const LinksRtlAndScrollerContainer = styled.div`
+  direction: rtl;
+  overflow-y: auto;
   
-    /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
+  /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
   ::-webkit-scrollbar {
       width: 8px;
   }
@@ -82,7 +78,17 @@ const LinksContainer = styled.div`
       border-radius: 10px;
       background: #d5dbdb;
       -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  }
+  }  
+`
+
+const LinksContainer = styled.div`
+  margin-top: 16px;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: flex-end;
 `
 
 const LinkContainer = styled.div`
@@ -127,7 +133,7 @@ const Board = (props: BoardProps) => {
             ))
           }
         </LabelsContainer>
-        <div direction={rtl + style scoller}>
+        <LinksRtlAndScrollerContainer>
           <LinksContainer>
             {
               links.map((link) => (
@@ -141,7 +147,7 @@ const Board = (props: BoardProps) => {
               ))
             }
           </LinksContainer>
-        </div>
+        </LinksRtlAndScrollerContainer>
       </BoardContent>
       <BoardInfoWithLayout boardId={boardId} />
     </Root>

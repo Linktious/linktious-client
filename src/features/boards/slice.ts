@@ -14,6 +14,18 @@ export const fetchBoards = createAsyncThunk<types.Board[]>(
   },
 )
 
+interface setBoardLabelsFiltersPayload {
+  boardId: number
+  labelsFilters: number[]
+}
+
+export const setBoardLabelsFilters = createAsyncThunk<types.Board, setBoardLabelsFiltersPayload>(
+  'boards/setBoardLabelsFilters',
+  async ({ boardId, labelsFilters }) => {
+    return await BoardService.setBoardLabelsFilters(boardId, labelsFilters)
+  },
+)
+
 interface BoardsState {
   boards: types.Board[],
   searchLinksWord: string,
@@ -35,6 +47,11 @@ export const boardsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchBoards.fulfilled, (state, action) => {
       state.boards = action.payload
+    })
+
+    builder.addCase(setBoardLabelsFilters.fulfilled, (state, action) => {
+      const updatedBoard = action.payload
+      state.boards = state.boards.map((board) => board.id === updatedBoard.id ? updatedBoard : board)
     })
   },
 })
