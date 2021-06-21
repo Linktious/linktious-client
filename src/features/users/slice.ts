@@ -91,4 +91,5 @@ export const { } = usersSlice.actions
 export default usersSlice.reducer
 
 export const getUserById = (userId: number) => (state: RootState) => state.users.users[userId]
+export const getAuthenticatedUser = (state: RootState) => state.users.authenticatedUser
 

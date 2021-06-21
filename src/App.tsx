@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Route, BrowserRouter, Switch } from 'react-router-dom'
+import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
 import styled, { ThemeProvider } from 'styled-components'
 import store from '~/store'
-import { useAppDispatch } from '~/store/hooks'
+import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import theme, { GlobalStyle } from '~/Theme'
 import { userLogin } from '~/features/users'
 import Board, { fetchBoards } from '~/features/boards'
-import Link, { fetchLinks } from '~/features/links'
+import { fetchLinks } from '~/features/links'
 import { fetchLabels } from '~/features/labels'
+import { getAuthenticatedUser } from '~/features/users/slice'
+import { Sidebar } from '~/features/sidebar'
 
 
 const Root = styled.div`
@@ -25,12 +27,29 @@ const Content = styled.div`
   width: 100%;
   flex: 1;
   display: flex;
-  margin: 16px;
+  margin-left: 8px;
 `
 
 const BoardWithLayout = styled(Board)`
   flex: 3;
 `
+
+const Home = () => {
+  const user = useAppSelector(getAuthenticatedUser)
+  if (!user) {
+    return null
+  }
+  else if (user.mainBoardId >= 0) {
+    return (
+      <Redirect to={`/board/${user.mainBoardId}`} />
+    )
+  }
+  else {
+    return (
+      <Redirect to="/boards" />
+    )
+  }
+}
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -46,12 +65,13 @@ const App = () => {
       dispatch(fetchLinks()),
       dispatch(fetchLabels()),
     ])
-    setLoading(false)
   }
 
   useEffect(() => {
     setLoading(true)
-    fetchData().then(() => console.log('Fetched data!'))
+    fetchData().then(() => {
+      setLoading(false)
+    })
   }, [dispatch])
 
   if (loading) {
@@ -61,15 +81,26 @@ const App = () => {
   }
 
   return (
-    <Content>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Sidebar />
+      <Content>
         <Switch>
-          <Route path="/board" render={() => <BoardWithLayout boardId={1}/>}/>
-          <Route path="/link" render={() => <Link linkId={1}/>}/>
-          <Route path="/" render={() => <div>render</div>}/>
+          <Route path="/board/:boardId">
+            <BoardWithLayout/>
+          </Route>
+          <Route path="/links">
+            <div>Links Explorer</div>
+          </Route>
+          <Route path="/boards/">
+            <div>Boards Explorer</div>
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
         </Switch>
-      </BrowserRouter>
-    </Content>
+      </Content>
+
+    </BrowserRouter>
   )
 }
 

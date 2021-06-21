@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import Label from '~/features/labels'
 import SearchLinks from '~/features/boards/SearchLinks'
 import BoardInfo from '~/features/boards/BoardInfo'
+import { useParams } from 'react-router-dom'
 
 
 const Root = styled.div`
@@ -58,8 +59,11 @@ const LabelContainer = styled.div`
   margin-left: 8px;
 `
 
+// TODO: consider changing it to be axis-x scroller instead.
 const LinksRtlAndScrollerContainer = styled.div`
-  direction: rtl;
+  margin-top: 16px;
+  margin-right: 24px;
+  direction: ltr;
   overflow-y: auto;
   
   /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
@@ -82,13 +86,12 @@ const LinksRtlAndScrollerContainer = styled.div`
 `
 
 const LinksContainer = styled.div`
-  margin-top: 16px;
   flex: 1;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-content: flex-start;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `
 
 const LinkContainer = styled.div`
@@ -98,12 +101,19 @@ const LinkContainer = styled.div`
 `
 
 interface BoardProps {
-  boardId: number
   className?: string
 }
 
+interface BoardParams {
+  boardId: string
+}
+
 const Board = (props: BoardProps) => {
-  const { className, boardId } = props
+  const { className } = props
+
+  const { boardId: boardIdParam } = useParams<BoardParams>()
+  const boardId = Number(boardIdParam)
+
   const board = useAppSelector(selectBoardById(boardId))
   const searchLinksWord = useAppSelector(selectSearchLinks())
   if (!board) return null
