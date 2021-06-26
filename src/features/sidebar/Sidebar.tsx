@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
@@ -8,9 +8,9 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { Tooltip } from '@material-ui/core'
 
 
 const StyledDrawer = styled(Drawer)`
@@ -33,7 +33,7 @@ const DrawerOpenCloseButton = styled.button<DrawerOpenCloseButtonProps>`
   flex-direction: row;
   align-items: center;
   justify-content: ${(props) => props.open ? 'flex-end' : 'center'};
- `
+`
 
 const Logo = styled.div`
   display: flex;
@@ -43,18 +43,45 @@ const Logo = styled.div`
   font-weight: bolder;
 `
 
+const StyledTooltip = styled(({ className, children, ...props }) => (
+  <Tooltip classes={{ popper: className }} {...props} >
+    {children}
+  </Tooltip>
+))`
+  & .MuiTooltip-tooltip {
+    font-size: 12px;
+  }
+`
+
 // TODO: add animation
 // TODO: Fix open/close menu css
 // TODO: select logo
 // TODO: select icons for explore boards / links
-// TODO: mark the tab item that is currently selected
-// TODO: add tooltip if closed
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const { pathname } = useLocation()
 
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState)
   }
+
+  const items = [{
+    route: '/boards',
+    icon: <InboxIcon />,
+    description: 'Explore Boards',
+  }, {
+    route: '/links',
+    icon: <InboxIcon />,
+    description: 'Explore Links',
+  }, {
+    route: '/favorite-boards',
+    icon: <InboxIcon />,
+    description: 'Favorite Boards',
+  }, {
+    route: '/labels',
+    icon: <InboxIcon />,
+    description: 'Labels',
+  }]
 
   return (
     <StyledDrawer
@@ -75,22 +102,26 @@ const Sidebar = () => {
       </Link>
       <Divider />
       <List>
-        <Link to="/boards">
-          <ListItem>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary='Explore Boards' />
-          </ListItem>
-        </Link>
-        <Link to="/links">
-          <ListItem>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary='Explore Links' />
-          </ListItem>
-        </Link>
+        {items.map(({ route, icon, description }, idx) => (
+          <StyledTooltip
+            key={`route-${idx}`}
+            title={isOpen ? '' : description}
+            placement='right-end'
+            arrow
+          >
+            <ListItem
+              button
+              component={Link}
+              to={route}
+              selected={pathname == route}
+            >
+              <ListItemIcon>
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={description} />
+            </ListItem>
+          </StyledTooltip>
+        ))}
       </List>
     </StyledDrawer>
   )

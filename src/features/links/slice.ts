@@ -5,7 +5,6 @@ import {
 import * as types from './types'
 import LinkService from './service'
 import { RootState } from '~/store/rootReducer'
-import { selectAllLabels } from '~/features/labels/slice'
 
 
 export const fetchLinks = createAsyncThunk<types.Link[]>(

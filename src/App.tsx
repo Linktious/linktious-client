@@ -94,6 +94,12 @@ const App = () => {
           <Route path="/boards/">
             <div>Boards Explorer</div>
           </Route>
+          <Route path="/favorite-boards/">
+            <div>Favorite Boards</div>
+          </Route>
+          <Route path="/labels/">
+            <div>Labels</div>
+          </Route>
           <Route path="/">
             <Home />
           </Route>
