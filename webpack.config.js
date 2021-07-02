@@ -44,7 +44,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(src, 'index.html'),
-      // favicon: path.resolve(src, 'favicon.ico'),
+      favicon: path.resolve(src, 'favicon.ico'),
     }),
     new WebpackManifestPlugin({
       fileName: 'asset-manifest.json',

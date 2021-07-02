@@ -10,37 +10,60 @@ import ListItemText from '@material-ui/core/ListItemText'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import styled from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
-import { Tooltip } from '@material-ui/core'
+import { IconButton, Tooltip } from '@material-ui/core'
+import Logo from '../../../static/img/logo_transparent.png'
+import CollapseLogo from '../../../static/img/collapse_logo_transparent.png'
 
 
 const StyledDrawer = styled(Drawer)`
   flex-shrink: 0;
   white-space: nowrap;
-  
+  transition: width 0.5s;
   width: ${(props) => props.open ? '240px' : '56px'};
+  
   & > * {
     width: inherit;
     overflow-x: hidden;
   }
 `
 
-interface DrawerOpenCloseButtonProps {
-  open: boolean
-}
-
-const DrawerOpenCloseButton = styled.button<DrawerOpenCloseButtonProps>`
+const DrawerOpenCloseButton = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: ${(props) => props.open ? 'flex-end' : 'center'};
 `
 
-const Logo = styled.div`
+const DrawerOpenButton = styled((props) => (
+  <DrawerOpenCloseButton {...props} >
+    <IconButton>
+      <ChevronLeftIcon />
+    </IconButton>
+  </DrawerOpenCloseButton>
+))`
+  justify-content: flex-end;
+`
+
+const DrawerCloseButton = styled((props) => (
+  <DrawerOpenCloseButton {...props} >
+    <IconButton>
+      <MenuIcon />
+    </IconButton>
+  </DrawerOpenCloseButton>
+))`
+  justify-content: center;
+`
+
+const LogoContainer = styled.div`
+  margin: 8px 0;
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
-  font-weight: bolder;
+`
+
+const ImgLogo = styled.img`
+  height: 45px;
+  width: 219px;
 `
 
 const StyledTooltip = styled(({ className, children, ...props }) => (
@@ -53,9 +76,40 @@ const StyledTooltip = styled(({ className, children, ...props }) => (
   }
 `
 
-// TODO: add animation
-// TODO: Fix open/close menu css
-// TODO: select logo
+interface DrawerHeaderProps {
+  isOpen: boolean
+  toggleDrawer: React.MouseEventHandler<HTMLButtonElement>
+}
+
+const DrawerHeader = ({ isOpen, toggleDrawer }: DrawerHeaderProps) => {
+  if (isOpen) {
+    return (
+      <>
+        <DrawerOpenButton onClick={toggleDrawer} />
+        <Divider />
+        <Link to="/">
+          <LogoContainer>
+            <ImgLogo src={Logo} />
+          </LogoContainer>
+        </Link>
+      </>
+    )
+  }
+  else {
+    return (
+      <>
+        <DrawerCloseButton onClick={toggleDrawer} />
+        <Divider />
+        <Link to="/">
+          <LogoContainer>
+            <ImgLogo src={CollapseLogo} />
+          </LogoContainer>
+        </Link>
+      </>
+    )
+  }
+}
+
 // TODO: select icons for explore boards / links
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -88,18 +142,10 @@ const Sidebar = () => {
       variant="permanent"
       open={isOpen}
     >
-      <DrawerOpenCloseButton
-        onClick={toggleDrawer}
-        open={isOpen}
-      >
-        {isOpen ? <ChevronLeftIcon /> : <MenuIcon />}
-      </DrawerOpenCloseButton>
-      <Divider />
-      <Link to="/">
-        <List>
-          <Logo>L</Logo>
-        </List>
-      </Link>
+      <DrawerHeader
+        isOpen={isOpen}
+        toggleDrawer={toggleDrawer}
+      />
       <Divider />
       <List>
         {items.map(({ route, icon, description }, idx) => (
