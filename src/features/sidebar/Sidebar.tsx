@@ -11,8 +11,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox'
 import styled from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
 import { IconButton, Tooltip } from '@material-ui/core'
-import Logo from '../../../static/img/logo_transparent.png'
-import CollapseLogo from '../../../static/img/collapse_logo_transparent.png'
+import Logo from 'assets/img/logo_transparent.png'
+import CollapseLogo from 'assets/img/collapse_logo_transparent.png'
 
 
 const StyledDrawer = styled(Drawer)`

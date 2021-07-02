@@ -16,6 +16,7 @@ const port = process.env.PORT ?? 3000
 const publicPath = '/'
 
 const src = path.resolve(__dirname, 'src')
+const assets = path.resolve(__dirname, 'static')
 const dist = path.resolve(__dirname, 'build')
 const backendProxyURL = process.env.BACKEND_URL ?? 'http://localhost:8000/'
 
@@ -71,6 +72,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '~': src,
+      'assets': assets,
     },
   },
   devServer: {
