@@ -42,7 +42,7 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    searchLinks(state, action: PayloadAction<string>) {
+    searchLinksInBoard(state, action: PayloadAction<string>) {
       state.searchLinksWord = action.payload
     },
     searchLabels(state, action: PayloadAction<string>) {
@@ -62,7 +62,7 @@ export const boardsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { searchLinks, searchLabels } = boardsSlice.actions
+export const { searchLinksInBoard, searchLabels } = boardsSlice.actions
 
 export default boardsSlice.reducer
 

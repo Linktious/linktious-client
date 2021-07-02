@@ -1,6 +1,6 @@
 import {
   createSlice,
-  createAsyncThunk,
+  createAsyncThunk, PayloadAction,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import LinkService from './service'
@@ -16,16 +16,22 @@ export const fetchLinks = createAsyncThunk<types.Link[]>(
 
 interface LinksState {
   links: types.Link[]
+  searchLinksWord: string,
 }
 
 const initialState = {
   links: [],
+  searchLinksWord: '',
 } as LinksState
 
 export const linksSlice = createSlice({
   name: 'links',
   initialState,
-  reducers: {},
+  reducers: {
+    searchLinks(state, action: PayloadAction<string>) {
+      state.searchLinksWord = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchLinks.fulfilled, (state, action) => {
       // Duplicated the data for styling purposes.
@@ -41,7 +47,7 @@ export const linksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { } = linksSlice.actions
+export const { searchLinks } = linksSlice.actions
 
 export default linksSlice.reducer
 
@@ -49,5 +55,8 @@ export const selectAllLinks = (state: RootState) => state.links.links
 export const selectLinkById = (linkId: number) => (state: RootState) => selectAllLinks(state).find((link) => link.id === linkId)
 export const selectLinksByLabels = (labelsIds: number[]) => (state: RootState) => selectAllLinks(state)
   .filter((link) => link.labels.some((labelId) => labelsIds.includes(labelId)))
+export const selectSearchLinksWord = (state: RootState) => state.links.searchLinksWord
+const filterLinksBySearchWord = (links: types.Link[], searchWord: string) => links.filter((link) => link.description.toLowerCase().includes(searchWord.toLowerCase()))
+export const selectLinksFilteredBySearchWord = (searchWord: string) => (state: RootState) => filterLinksBySearchWord(selectAllLinks(state), searchWord)
 export const selectLinksByLabelsFilteredBySearchWord = (labelsIds: number[], searchWord: string) =>
-  (state: RootState) => selectLinksByLabels(labelsIds)(state).filter((link) => link.description.toLowerCase().includes(searchWord.toLowerCase()))
+  (state: RootState) => filterLinksBySearchWord(selectLinksByLabels(labelsIds)(state), searchWord)

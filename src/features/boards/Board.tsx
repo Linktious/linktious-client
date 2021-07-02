@@ -1,15 +1,15 @@
-import React from 'react'
-import { useAppSelector } from '~/store/hooks'
-import { selectBoardById, selectSearchLinks } from './slice'
+import React, { useCallback, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '~/store/hooks'
+import { searchLinksInBoard, selectBoardById, selectSearchLinks } from './slice'
 import {
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
-import Link from '~/features/links'
 import styled from 'styled-components'
 import Label from '~/features/labels'
-import SearchLinks from '~/features/boards/SearchLinks'
 import BoardInfo from '~/features/boards/BoardInfo'
-import { useParams } from 'react-router-dom'
+import SearchBar from '~/features/components/SearchBar'
+import Links from '~/features/links/Links'
 
 
 const Root = styled.div`
@@ -18,7 +18,7 @@ const Root = styled.div`
   align-content: flex-start;
 `
 
-const BoardContent = styled.div`
+const BoardContainer = styled.div`
   flex: 4;
   display: flex;
   flex-direction: column;
@@ -50,54 +50,13 @@ const LabelsContainer = styled.div`
   justify-content: flex-start;
 `
 
-const BoardLinksSearch = styled(SearchLinks)`
+const BoardLinksSearch = styled(SearchBar)`
   width: 350px;
   margin: 4px 0 0 24px;
 `
 
 const LabelContainer = styled.div`
   margin-left: 8px;
-`
-
-// TODO: consider changing it to be axis-x scroller instead.
-const LinksRtlAndScrollerContainer = styled.div`
-  margin-top: 16px;
-  margin-right: 24px;
-  direction: ltr;
-  overflow-y: auto;
-  
-  /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
-  ::-webkit-scrollbar {
-      width: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
-      background: #d5dbdb;
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  }  
-`
-
-const LinksContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-content: flex-start;
-  justify-content: flex-start;
-`
-
-const LinkContainer = styled.div`
-  margin: 16px;
-  height: fit-content;
-  width: fit-content;
 `
 
 interface BoardProps {
@@ -121,14 +80,31 @@ const Board = (props: BoardProps) => {
   const links = useAppSelector(
     selectLinksByLabelsFilteredBySearchWord(board.labelsFilters, searchLinksWord),
   )
-  console.log(links)
+  const linksIds = useMemo(
+    () => links.map((link) => link.id),
+    [links],
+  )
+
+  const dispatch = useAppDispatch()
+
+  // TODO: create search hook?
+  const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(searchLinksInBoard(event.target.value))
+  }, [dispatch])
+  const onClearSearch = useCallback(() => {
+    dispatch(searchLinksInBoard(''))
+  }, [dispatch])
 
   return (
     <Root className={className}>
-      <BoardContent>
+      <BoardContainer>
         <TitleAndLinkSearchContainer>
           <Title>{board.name}</Title>
-          <BoardLinksSearch />
+          <BoardLinksSearch
+            searchWord={searchLinksWord}
+            onSearch={onSearch}
+            onClearSearch={onClearSearch}
+          />
         </TitleAndLinkSearchContainer>
         <LabelsContainer>
           {
@@ -143,22 +119,8 @@ const Board = (props: BoardProps) => {
             ))
           }
         </LabelsContainer>
-        <LinksRtlAndScrollerContainer>
-          <LinksContainer>
-            {
-              links.map((link) => (
-                <LinkContainer
-                  key={`link-${link.id}`}
-                >
-                  <Link
-                    linkId={link.id}
-                  />
-                </LinkContainer>
-              ))
-            }
-          </LinksContainer>
-        </LinksRtlAndScrollerContainer>
-      </BoardContent>
+        <Links linksIds={linksIds} />
+      </BoardContainer>
       <BoardInfoWithLayout boardId={boardId} />
     </Root>
   )

@@ -13,6 +13,7 @@ import { fetchLinks } from '~/features/links'
 import { fetchLabels } from '~/features/labels'
 import { getAuthenticatedUser } from '~/features/users/slice'
 import { Sidebar } from '~/features/sidebar'
+import ExploreLinks from "~/features/links/ExploreLinks";
 
 
 const Root = styled.div`
@@ -56,7 +57,7 @@ const App = () => {
   const [loading, setLoading] = useState<boolean>(true)
 
   const fetchData = async () => {
-    await Promise.all([
+    return await Promise.all([
       dispatch(userLogin({
         email: 'user@email.com',
         password: '12345678',
@@ -89,7 +90,7 @@ const App = () => {
             <BoardWithLayout/>
           </Route>
           <Route path="/links">
-            <div>Links Explorer</div>
+            <ExploreLinks />
           </Route>
           <Route path="/boards/">
             <div>Boards Explorer</div>
