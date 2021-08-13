@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom'
+import { QueryParamProvider } from 'use-query-params'
 import { Provider as ReduxProvider } from 'react-redux'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
@@ -13,7 +14,7 @@ import { fetchLinks } from '~/features/links'
 import { fetchLabels } from '~/features/labels'
 import { getAuthenticatedUser } from '~/features/users/slice'
 import { Sidebar } from '~/features/sidebar'
-import ExploreLinks from "~/features/links/ExploreLinks";
+import ExploreLinks from '~/features/links/ExploreLinks'
 
 
 const Root = styled.div`
@@ -83,30 +84,31 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Sidebar />
-      <Content>
-        <Switch>
-          <Route path="/board/:boardId">
-            <BoardWithLayout/>
-          </Route>
-          <Route path="/links">
-            <ExploreLinks />
-          </Route>
-          <Route path="/boards/">
-            <div>Boards Explorer</div>
-          </Route>
-          <Route path="/favorite-boards/">
-            <div>Favorite Boards</div>
-          </Route>
-          <Route path="/labels/">
-            <div>Labels</div>
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </Content>
-
+      <QueryParamProvider ReactRouterRoute={Route}>
+        <Sidebar />
+        <Content>
+          <Switch>
+            <Route path="/board/:boardId">
+              <BoardWithLayout/>
+            </Route>
+            <Route path="/links">
+              <ExploreLinks />
+            </Route>
+            <Route path="/boards/">
+              <div>Boards Explorer</div>
+            </Route>
+            <Route path="/favorite-boards/">
+              <div>Favorite Boards</div>
+            </Route>
+            <Route path="/labels/">
+              <div>Labels</div>
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Content>
+      </QueryParamProvider>
     </BrowserRouter>
   )
 }

@@ -24,6 +24,7 @@
     "http-status-codes": "^2.1.4",
     "jest": "^26.6.3",
     "lodash": "^4.17.20",
+    "query-string": "^7.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-inlinesvg": "^2.2.2",
@@ -31,7 +32,8 @@
     "react-resize-detector": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "use-query-params": "^1.2.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

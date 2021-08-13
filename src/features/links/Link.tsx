@@ -5,6 +5,7 @@ import { useAppSelector } from '~/store/hooks'
 import { selectLinkById } from '~/features/links/slice'
 import { selectLabelsByIds } from '~/features/labels/slice'
 import { Tooltip } from '@material-ui/core'
+import { LinkRouterWithLabelFilter } from '~/features/links/ExploreLinks'
 
 
 const LinkCard = styled(Card)`
@@ -102,15 +103,20 @@ const Link = (props: LinkProps) => {
       <Labels>
         {
           labels.map((label) => (
-            <Tooltip
+            <LinkRouterWithLabelFilter
               key={`label-${label.id}`}
-              title={<LabelTooltipTitle>{label.name}</LabelTooltipTitle>}
-              arrow={true}
+              labelId={label.id}
             >
-              <LinkLabel
-                backgroundColor={label.backgroundColor}
-              />
-            </Tooltip>
+              <Tooltip
+                title={<LabelTooltipTitle>{label.name}</LabelTooltipTitle>}
+                arrow={true}
+              >
+
+                <LinkLabel
+                  backgroundColor={label.backgroundColor}
+                />
+              </Tooltip>
+            </LinkRouterWithLabelFilter>
           ))
         }
       </Labels>

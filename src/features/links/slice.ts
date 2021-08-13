@@ -58,5 +58,15 @@ export const selectLinksByLabels = (labelsIds: number[]) => (state: RootState) =
 export const selectSearchLinksWord = (state: RootState) => state.links.searchLinksWord
 const filterLinksBySearchWord = (links: types.Link[], searchWord: string) => links.filter((link) => link.description.toLowerCase().includes(searchWord.toLowerCase()))
 export const selectLinksFilteredBySearchWord = (searchWord: string) => (state: RootState) => filterLinksBySearchWord(selectAllLinks(state), searchWord)
-export const selectLinksByLabelsFilteredBySearchWord = (labelsIds: number[], searchWord: string) =>
-  (state: RootState) => filterLinksBySearchWord(selectLinksByLabels(labelsIds)(state), searchWord)
+export const selectLinksByLabelsFilteredBySearchWord = (labelsIds: number[] | null, searchWord: string) =>
+  (state: RootState) => {
+    let links
+    if (labelsIds !== null ) {
+      links = selectLinksByLabels(labelsIds)(state)
+    }
+    else {
+      links = selectAllLinks(state)
+    }
+
+    return filterLinksBySearchWord(links, searchWord)
+  }
