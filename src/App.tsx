@@ -15,6 +15,7 @@ import { fetchLabels } from '~/features/labels'
 import { getAuthenticatedUser } from '~/features/users/slice'
 import { Sidebar } from '~/features/sidebar'
 import ExploreLinks from '~/features/links/ExploreLinks'
+import ExploreLabels from "~/features/labels/ExportLabels";
 
 
 const Root = styled.div`
@@ -101,7 +102,7 @@ const App = () => {
               <div>Favorite Boards</div>
             </Route>
             <Route path="/labels/">
-              <div>Labels</div>
+              <ExploreLabels />
             </Route>
             <Route path="/">
               <Home />

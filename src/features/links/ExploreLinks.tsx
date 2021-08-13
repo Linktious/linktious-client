@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { Link as LinkRouter, LinkProps } from 'react-router-dom'
-import { useQueryParam, NumberParam } from 'use-query-params'
+import { NumberParam, useQueryParam } from 'use-query-params'
 import styled from 'styled-components'
 import SearchBar from '~/features/components/SearchBar'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'

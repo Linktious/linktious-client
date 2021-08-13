@@ -14,7 +14,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import Card from '@material-ui/core/Card'
 import { selectLabelsFilteredBySearchWord } from '~/features/labels/slice'
-import Label from '~/features/labels'
+import { LabelTag } from '~/features/labels'
 import { fetchUserInfo, getUserById } from '~/features/users/slice'
 
 
@@ -213,7 +213,7 @@ const BoardLabels = (props: BoardLabelsProps) => {
                     />
                   }
                   label={
-                    <Label
+                    <LabelTag
                       key={`board-label-${labelId}`}
                       labelId={labelId}
                     />

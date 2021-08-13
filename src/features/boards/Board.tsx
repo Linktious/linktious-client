@@ -6,7 +6,7 @@ import {
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
-import Label from '~/features/labels'
+import { LabelTag } from '~/features/labels'
 import BoardInfo from '~/features/boards/BoardInfo'
 import SearchBar from '~/features/components/SearchBar'
 import Links from '~/features/links/Links'
@@ -112,7 +112,7 @@ const Board = (props: BoardProps) => {
               <LabelContainer
                 key={`label-${labelId}`}
               >
-                <Label
+                <LabelTag
                   labelId={labelId}
                 />
               </LabelContainer>

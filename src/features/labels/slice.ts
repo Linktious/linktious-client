@@ -28,7 +28,18 @@ export const labelsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchLabels.fulfilled, (state, action) => {
-      state.labels = action.payload.map((label) => ({
+      // Duplicated data for styling purposes.
+      // state.labels = action.payload.map((label) => ({
+      //   ...label,
+      //   backgroundColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+      // }))
+      const baseArray = new Array(50).fill(0)
+      const duplicatedLabels = action.payload.concat(baseArray.map((i, idx) => action.payload.map((label) => ({
+        ...label,
+        id: Number(String(label.id) + String(idx)),
+      }))).flat())
+
+      state.labels = duplicatedLabels.map((label) => ({
         ...label,
         backgroundColor: '#' + Math.floor(Math.random()*16777215).toString(16),
       }))
