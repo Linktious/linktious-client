@@ -83,22 +83,4 @@ const ExploreLinks = (props: ExploreLinksProps) => {
   )
 }
 
-export interface LinkRouterWithLabelFilterProps extends Omit<LinkProps, 'to'> {
-  labelId: number
-  children: JSX.Element | JSX.Element[]
-}
-
-export const LinkRouterWithLabelFilter = (props: LinkRouterWithLabelFilterProps) => {
-  const { labelId, children, ...linkRouterProps } = props
-
-  return (
-    <LinkRouter
-      to={`/links?labelId=${labelId}`}
-      {...linkRouterProps}
-    >
-      {children}
-    </LinkRouter>
-  )
-}
-
 export default ExploreLinks

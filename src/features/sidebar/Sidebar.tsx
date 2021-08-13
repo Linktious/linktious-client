@@ -124,13 +124,13 @@ const Sidebar = () => {
     icon: <InboxIcon />,
     description: 'Explore Boards',
   }, {
-    route: '/links',
-    icon: <InboxIcon />,
-    description: 'Explore Links',
-  }, {
     route: '/favorite-boards',
     icon: <InboxIcon />,
     description: 'Favorite Boards',
+  }, {
+    route: '/links',
+    icon: <InboxIcon />,
+    description: 'Explore Links',
   }, {
     route: '/labels',
     icon: <InboxIcon />,

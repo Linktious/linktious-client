@@ -1,12 +1,30 @@
 import React from 'react'
+import { Link as LinkRouter, LinkProps as LinkRouterProps } from 'react-router-dom'
 import styled from 'styled-components'
 import Card from '@material-ui/core/Card'
 import { useAppSelector } from '~/store/hooks'
 import { selectLinkById } from '~/features/links/slice'
 import { selectLabelsByIds } from '~/features/labels/slice'
 import { Tooltip } from '@material-ui/core'
-import { LinkRouterWithLabelFilter } from '~/features/links/ExploreLinks'
 
+
+export interface LinkRouterWithLabelFilterProps extends Omit<LinkRouterProps, 'to'> {
+  labelId: number
+  children: JSX.Element | JSX.Element[] | string
+}
+
+const LinkRouterWithLabelFilter = (props: LinkRouterWithLabelFilterProps) => {
+  const { labelId, children, ...linkRouterProps } = props
+
+  return (
+    <LinkRouter
+      to={`/links?labelId=${labelId}`}
+      {...linkRouterProps}
+    >
+      {children}
+    </LinkRouter>
+  )
+}
 
 const LinkCard = styled(Card)`
   width: 200px;
@@ -133,4 +151,7 @@ const Link = (props: LinkProps) => {
   )
 }
 
-export default Link
+export {
+  Link,
+  LinkRouterWithLabelFilter,
+}

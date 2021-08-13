@@ -68,6 +68,10 @@ export default boardsSlice.reducer
 
 // TODO: use reselect
 export const selectAllBoards = (state: RootState) => state.boards.boards
+export const selectBoardsByIds = (boardIds: number[]) => (state: RootState) => selectAllBoards(state).filter((board) => boardIds.includes(board.id))
+const filterBoardsBySearchWord = (boards: types.Board[], searchWord: string) => boards.filter((board) => board.name.toLowerCase().includes(searchWord.toLowerCase()))
+export const selectBoardsFilteredBySearchWord = (searchWord: string) => (state: RootState) => filterBoardsBySearchWord(selectAllBoards(state), searchWord)
+export const selectBoardsByIdsAndSearchWord = (boardsIds: number[], searchWord: string) => (state: RootState) => filterBoardsBySearchWord(selectBoardsByIds(boardsIds)(state), searchWord)
 // TODO: use previous selector to get boards
 export const selectBoardById = (boardId: number) => (state: RootState) => state.boards.boards.find((board) => board.id === boardId)
 export const selectSearchLinks = () => (state: RootState) => state.boards.searchLinksWord

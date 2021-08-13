@@ -37,7 +37,7 @@ const SectionTitleText = styled.span`
 interface SectionProps {
   title: string
   icon: JSX.Element
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[] | string
   className?: string
 }
 

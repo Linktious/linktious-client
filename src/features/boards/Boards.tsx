@@ -1,10 +1,10 @@
 import React from 'react'
-import { Link } from '~/features/links'
 import styled from 'styled-components'
+import {BoardCard} from "~/features/boards/Board";
 
 
 // TODO: consider changing it to be axis-x scroller instead.
-const LinksRtlAndScrollerContainer = styled.div`
+const BoardsRtlAndScrollerContainer = styled.div`
   margin-top: 16px;
   margin-right: 24px;
   direction: ltr;
@@ -29,7 +29,7 @@ const LinksRtlAndScrollerContainer = styled.div`
   }  
 `
 
-const LinksWrapper = styled.div`
+const BoardsWrapper = styled.div`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
@@ -38,33 +38,31 @@ const LinksWrapper = styled.div`
   justify-content: flex-start;
 `
 
-const LinkContainer = styled.div`
+const BoardContainer = styled.div`
   margin: 16px;
   height: fit-content;
   width: fit-content;
 `
 
-interface LinksProps {
+interface BoardsProps {
   className?: string
-  linksIds: number[]
+  boardsIds: number[]
 }
 
-const Links = ({ className, linksIds }: LinksProps) => (
-  <LinksRtlAndScrollerContainer className={className}>
-    <LinksWrapper>
+const Boards = ({ className, boardsIds }: BoardsProps) => (
+  <BoardsRtlAndScrollerContainer className={className}>
+    <BoardsWrapper>
       {
-        linksIds.map((linkId) => (
-          <LinkContainer
-            key={`link-${linkId}`}
+        boardsIds.map((boardId) => (
+          <BoardContainer
+            key={`board-${boardId}`}
           >
-            <Link
-              linkId={linkId}
-            />
-          </LinkContainer>
+            <BoardCard boardId={boardId} />
+          </BoardContainer>
         ))
       }
-    </LinksWrapper>
-  </LinksRtlAndScrollerContainer>
+    </BoardsWrapper>
+  </BoardsRtlAndScrollerContainer>
 )
 
-export default Links
+export default Boards

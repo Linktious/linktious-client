@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link as LinkRouter, LinkProps as LinkRouterProps, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import { searchLinksInBoard, selectBoardById, selectSearchLinks } from './slice'
 import {
@@ -10,7 +10,27 @@ import { LabelTag } from '~/features/labels'
 import BoardInfo from '~/features/boards/BoardInfo'
 import SearchBar from '~/features/components/SearchBar'
 import Links from '~/features/links/Links'
+import Card from '@material-ui/core/Card'
+import { Tooltip } from '@material-ui/core'
 
+
+export interface BoardRouterProps extends Omit<LinkRouterProps, 'to'> {
+  boardId: number
+  children: JSX.Element | JSX.Element[] | string
+}
+
+const BoardRouter = (props: BoardRouterProps) => {
+  const { boardId, children, ...linkRouterProps } = props
+
+  return (
+    <LinkRouter
+      to={`/board/${boardId}`}
+      {...linkRouterProps}
+    >
+      {children}
+    </LinkRouter>
+  )
+}
 
 const Root = styled.div`
   display: flex;
@@ -27,7 +47,7 @@ const BoardContainer = styled.div`
 
 const BoardInfoWithLayout = styled(BoardInfo)`
   min-width: 350px;
-  
+
   flex: 1;
   border-left: 1px solid #c5c5c5a8;
 `
@@ -67,7 +87,7 @@ interface BoardParams {
   boardId: string
 }
 
-const Board = (props: BoardProps) => {
+const BoardWithLinks = (props: BoardProps) => {
   const { className } = props
 
   const { boardId: boardIdParam } = useParams<BoardParams>()
@@ -119,11 +139,121 @@ const Board = (props: BoardProps) => {
             ))
           }
         </LabelsContainer>
-        <Links linksIds={linksIds} />
+        <Links linksIds={linksIds}/>
       </BoardContainer>
-      <BoardInfoWithLayout boardId={boardId} />
+      <BoardInfoWithLayout boardId={boardId}/>
     </Root>
   )
 }
 
-export default Board
+const BoardCardStyled = styled(Card)`
+  width: 200px;
+  height: 180px;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: space-between;
+`
+
+const BoardTopSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const BoardNameTooltipTitle = styled.div`
+  font-size: 0.9rem;
+`
+
+const BoardNameWrapper = styled.div`
+  border: 2px solid #80808047;
+  background: aliceblue;
+  font-family: monospace;
+  font-size: x-large;
+  
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const BoardName = styled.div`
+  margin-left: 8px;
+`
+
+const Description = styled.div`
+  margin: 8px;
+  font-size: 16px;
+  font-family: monospace;
+  line-break: anywhere;
+
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+const BoardLinkAddress = styled.a`
+  height: 40px;
+  color: #1c88e6;
+  font-weight: bold;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+interface BoardCardProps {
+  boardId: number
+  className?: string
+}
+
+// TODO: link to board with links
+const BoardCard = (props: BoardCardProps) => {
+  const { className, boardId } = props
+
+  const board = useAppSelector(selectBoardById(boardId))
+  if (!board) return null
+
+  return (
+    <BoardCardStyled
+      className={className}
+      square={true}
+      elevation={6}
+    >
+      <BoardTopSection>
+        <Tooltip
+          placement='top-end'
+          arrow={true}
+          title={
+            <BoardNameTooltipTitle>
+              {board.name}
+            </BoardNameTooltipTitle>
+          }
+        >
+          <BoardNameWrapper>
+            <BoardName> {board.name} </BoardName>
+          </BoardNameWrapper>
+        </Tooltip>
+        <Description>
+          {board.description}
+        </Description>
+      </BoardTopSection>
+      <BoardRouter
+        boardId={board.id}
+      >
+        <BoardLinkAddress>
+          Go to Board
+        </BoardLinkAddress>
+      </BoardRouter>
+    </BoardCardStyled>
+  )
+}
+
+
+export {
+  BoardWithLinks,
+  BoardCard,
+  BoardRouter,
+}

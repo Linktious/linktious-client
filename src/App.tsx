@@ -9,13 +9,14 @@ import store from '~/store'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import theme, { GlobalStyle } from '~/Theme'
 import { userLogin } from '~/features/users'
-import Board, { fetchBoards } from '~/features/boards'
+import { fetchBoards, BoardWithLinks, FavoriteBoards } from '~/features/boards'
 import { fetchLinks } from '~/features/links'
 import { fetchLabels } from '~/features/labels'
 import { getAuthenticatedUser } from '~/features/users/slice'
 import { Sidebar } from '~/features/sidebar'
 import ExploreLinks from '~/features/links/ExploreLinks'
-import ExploreLabels from "~/features/labels/ExportLabels";
+import ExploreLabels from '~/features/labels/ExportLabels'
+import ExploreBoards from './features/boards/ExploreBoards'
 
 
 const Root = styled.div`
@@ -33,7 +34,7 @@ const Content = styled.div`
   margin-left: 8px;
 `
 
-const BoardWithLayout = styled(Board)`
+const BoardWithLayout = styled(BoardWithLinks)`
   flex: 3;
 `
 
@@ -96,10 +97,10 @@ const App = () => {
               <ExploreLinks />
             </Route>
             <Route path="/boards/">
-              <div>Boards Explorer</div>
+              <ExploreBoards />
             </Route>
             <Route path="/favorite-boards/">
-              <div>Favorite Boards</div>
+              <FavoriteBoards />
             </Route>
             <Route path="/labels/">
               <ExploreLabels />
