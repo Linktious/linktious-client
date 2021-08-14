@@ -5,10 +5,9 @@ import Boards from '~/features/boards/Boards'
 import { useAppSelector } from '~/store/hooks'
 import {
   selectBoardsByIdsAndSearchWord,
-  selectBoardsFilteredBySearchWord,
 } from '~/features/boards/slice'
 import { StringParam, useQueryParam } from 'use-query-params'
-import {getAuthenticatedUser} from "~/features/users/slice";
+import { getAuthenticatedUser } from '~/features/users/slice'
 
 
 const Root = styled.div`

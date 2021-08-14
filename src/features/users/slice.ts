@@ -1,6 +1,6 @@
 import {
   createSlice,
-  createAsyncThunk,
+  createAsyncThunk, PayloadAction,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import UserService from './service'
@@ -40,6 +40,26 @@ export const setUserFavoriteBoards = createAsyncThunk<types.User, number[], { st
   },
 )
 
+export const toggleUserFavoriteBoard = createAsyncThunk<types.User, number, { state: RootState, rejectValue: string }>(
+  'users/toggleUserFavoriteBoard',
+  async (boardId, { getState, rejectWithValue }) => {
+    const authenticatedUser = getState().users.authenticatedUser
+    if (authenticatedUser === null) {
+      return rejectWithValue('User is not authenticated')
+    }
+
+    let favoriteBoardIds
+    if (authenticatedUser.favoriteBoards.includes(boardId)) {
+      favoriteBoardIds = authenticatedUser.favoriteBoards.filter((favoriteBoardId) => favoriteBoardId !== boardId)
+    }
+    else {
+      favoriteBoardIds = [...authenticatedUser.favoriteBoards, boardId]
+    }
+
+    return await UserService.setUserFavoriteBoards(authenticatedUser.id, favoriteBoardIds)
+  },
+)
+
 export const fetchUserInfo = createAsyncThunk<types.UserBasicInfo, number>(
   'users/fetchUserInfo',
   async (userId) => {
@@ -75,6 +95,10 @@ export const usersSlice = createSlice({
     })
 
     builder.addCase(setUserFavoriteBoards.fulfilled, (state, action) => {
+      state.authenticatedUser = action.payload
+    })
+
+    builder.addCase(toggleUserFavoriteBoard.fulfilled, (state, action) => {
       state.authenticatedUser = action.payload
     })
 

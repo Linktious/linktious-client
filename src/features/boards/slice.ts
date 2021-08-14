@@ -51,7 +51,13 @@ export const boardsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoards.fulfilled, (state, action) => {
+      // Duplicate boards for styling purposes
       state.boards = action.payload
+      const baseArray = new Array(50).fill(0)
+      state.boards = action.payload.concat(baseArray.map((i, idx) => action.payload.map((board) => ({
+        ...board,
+        id: Number(String(board.id) + String(idx)),
+      }))).flat())
     })
 
     builder.addCase(setBoardLabelsFilters.fulfilled, (state, action) => {
@@ -76,3 +82,4 @@ export const selectBoardsByIdsAndSearchWord = (boardsIds: number[], searchWord: 
 export const selectBoardById = (boardId: number) => (state: RootState) => state.boards.boards.find((board) => board.id === boardId)
 export const selectSearchLinks = () => (state: RootState) => state.boards.searchLinksWord
 export const selectSearchLabels = () => (state: RootState) => state.boards.searchLabelsWord
+export const selectIsFavoriteBoard = (boardId: number) => (state: RootState) => state.users.authenticatedUser ? state.users.authenticatedUser.favoriteBoards.includes(boardId) : false

@@ -1,8 +1,18 @@
 import React, { useCallback, useMemo } from 'react'
-import { Link as LinkRouter, LinkProps as LinkRouterProps, useParams } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '~/store/hooks'
-import { searchLinksInBoard, selectBoardById, selectSearchLinks } from './slice'
 import {
+  Link as LinkRouter,
+  LinkProps as LinkRouterProps,
+  useParams,
+} from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '~/store/hooks'
+import {
+  searchLinksInBoard,
+  selectBoardById,
+  selectIsFavoriteBoard,
+  selectSearchLinks,
+} from './slice'
+import {
+  selectLinksByLabels,
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
@@ -10,9 +20,13 @@ import { LabelTag } from '~/features/labels'
 import BoardInfo from '~/features/boards/BoardInfo'
 import SearchBar from '~/features/components/SearchBar'
 import Links from '~/features/links/Links'
-import Card from '@material-ui/core/Card'
-import { Tooltip } from '@material-ui/core'
-
+import {
+  Card,
+  Badge,
+  Tooltip,
+} from '@material-ui/core'
+import { FavoriteStar, FavoriteStarProps } from '../components/FavoriteStar'
+import { toggleUserFavoriteBoard } from '~/features/users/slice'
 
 export interface BoardRouterProps extends Omit<LinkRouterProps, 'to'> {
   boardId: number
@@ -29,6 +43,38 @@ const BoardRouter = (props: BoardRouterProps) => {
     >
       {children}
     </LinkRouter>
+  )
+}
+
+const FavoriteIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  height: fit-content;
+`
+
+interface BoardFavoriteStarProps extends Omit<FavoriteStarProps, 'checked'> {
+  className?: string
+  boardId: number
+}
+
+const BoardFavoriteStar = (props: BoardFavoriteStarProps) => {
+  const { className, boardId, ...favoriteStarProps } = props
+  const isFavoriteBoard = useAppSelector(selectIsFavoriteBoard(boardId))
+
+  const dispatch = useAppDispatch()
+  const onFavoriteStarClick = useCallback(
+    () => dispatch(toggleUserFavoriteBoard(boardId)),
+    [boardId],
+  )
+
+  return (
+    <FavoriteIconWrapper className={className}>
+      <FavoriteStar
+        checked={isFavoriteBoard}
+        onClick={onFavoriteStarClick}
+        {...favoriteStarProps}
+      />
+    </FavoriteIconWrapper>
   )
 }
 
@@ -56,8 +102,14 @@ const Title = styled.div`
   font-size: xxx-large;
 `
 
-const TitleAndLinkSearchContainer = styled.div`
+const TopSection = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const TitleAndSearchWrapper = styled.div`
   display: flex;
   flex-direction: row;
 `
@@ -118,14 +170,17 @@ const BoardWithLinks = (props: BoardProps) => {
   return (
     <Root className={className}>
       <BoardContainer>
-        <TitleAndLinkSearchContainer>
-          <Title>{board.name}</Title>
-          <BoardLinksSearch
-            searchWord={searchLinksWord}
-            onSearch={onSearch}
-            onClearSearch={onClearSearch}
-          />
-        </TitleAndLinkSearchContainer>
+        <TopSection>
+          <TitleAndSearchWrapper>
+            <Title>{board.name}</Title>
+            <BoardLinksSearch
+              searchWord={searchLinksWord}
+              onSearch={onSearch}
+              onClearSearch={onClearSearch}
+            />
+          </TitleAndSearchWrapper>
+          <BoardFavoriteStar boardId={board.id} />
+        </TopSection>
         <LabelsContainer>
           {
             board.labelsFilters.map((labelId) => (
@@ -162,24 +217,26 @@ const BoardTopSection = styled.div`
   flex-direction: column;
 `
 
+const BoardBottomSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const BoardNameTooltipTitle = styled.div`
   font-size: 0.9rem;
 `
 
-const BoardNameWrapper = styled.div`
+const BoardName = styled.div`
   border: 2px solid #80808047;
   background: aliceblue;
   font-family: monospace;
   font-size: x-large;
-  
+  padding-left: 8px;
+
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-
-const BoardName = styled.div`
-  margin-left: 8px;
 `
 
 const Description = styled.div`
@@ -194,11 +251,17 @@ const Description = styled.div`
   justify-content: center;
 `
 
-const BoardLinkAddress = styled.a`
+const BoardCardFavoriteStar = styled(BoardFavoriteStar)`
+  .MuiIconButton-root {
+    padding: 4px;
+  }
+`
+
+const BoardLinkAddress = styled.div`
   height: 40px;
   color: #1c88e6;
   font-weight: bold;
-  
+
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -215,39 +278,46 @@ const BoardCard = (props: BoardCardProps) => {
 
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
+  const numberOfLinks = useAppSelector(selectLinksByLabels(board.labelsFilters)).length
 
   return (
-    <BoardCardStyled
-      className={className}
-      square={true}
-      elevation={6}
+    <Badge
+      showZero={true}
+      badgeContent={numberOfLinks * 100}
+      max={999}
+      color='primary'
     >
-      <BoardTopSection>
-        <Tooltip
-          placement='top-end'
-          arrow={true}
-          title={
-            <BoardNameTooltipTitle>
-              {board.name}
-            </BoardNameTooltipTitle>
-          }
-        >
-          <BoardNameWrapper>
-            <BoardName> {board.name} </BoardName>
-          </BoardNameWrapper>
-        </Tooltip>
-        <Description>
-          {board.description}
-        </Description>
-      </BoardTopSection>
-      <BoardRouter
-        boardId={board.id}
+      <BoardCardStyled
+        className={className}
+        square={true}
+        elevation={6}
       >
-        <BoardLinkAddress>
-          Go to Board
-        </BoardLinkAddress>
-      </BoardRouter>
-    </BoardCardStyled>
+        <BoardTopSection>
+          <Tooltip
+            placement='top-end'
+            arrow={true}
+            title={
+              <BoardNameTooltipTitle>
+                {board.name}
+              </BoardNameTooltipTitle>
+            }
+          >
+            <BoardName> {board.name} </BoardName>
+          </Tooltip>
+          <Description>
+            {board.description}
+          </Description>
+        </BoardTopSection>
+        <BoardBottomSection>
+          <BoardCardFavoriteStar boardId={board.id} />
+          <BoardRouter boardId={board.id}>
+            <BoardLinkAddress>
+              Go to Board
+            </BoardLinkAddress>
+          </BoardRouter>
+        </BoardBottomSection>
+      </BoardCardStyled>
+    </Badge>
   )
 }
 

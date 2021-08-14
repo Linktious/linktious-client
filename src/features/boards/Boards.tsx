@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {BoardCard} from "~/features/boards/Board";
+import { BoardCard } from '~/features/boards/Board'
 
 
 // TODO: consider changing it to be axis-x scroller instead.
@@ -9,6 +9,8 @@ const BoardsRtlAndScrollerContainer = styled.div`
   margin-right: 24px;
   direction: ltr;
   overflow-y: auto;
+  width: 100%;
+  height: 100%;
   
   /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
   ::-webkit-scrollbar {
