@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
-import SearchBar from '~/features/components/SearchBar'
+import SearchBar from '~/features/common/SearchBar'
 import Boards from '~/features/boards/Boards'
 import { useAppSelector } from '~/store/hooks'
 import {

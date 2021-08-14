@@ -16,16 +16,19 @@ import {
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
+import {
+  SearchBar,
+  FavoriteStar,
+  FavoriteStarProps,
+} from '~/features/common'
 import { LabelTag } from '~/features/labels'
 import BoardInfo from '~/features/boards/BoardInfo'
-import SearchBar from '~/features/components/SearchBar'
 import Links from '~/features/links/Links'
 import {
   Card,
   Badge,
   Tooltip,
 } from '@material-ui/core'
-import { FavoriteStar, FavoriteStarProps } from '../components/FavoriteStar'
 import { toggleUserFavoriteBoard } from '~/features/users/slice'
 
 export interface BoardRouterProps extends Omit<LinkRouterProps, 'to'> {

@@ -1,15 +1,13 @@
-import React, { useCallback, useMemo } from 'react'
-import { Link as LinkRouter, LinkProps } from 'react-router-dom'
+import React, { useMemo } from 'react'
 import { NumberParam, useQueryParam } from 'use-query-params'
 import styled from 'styled-components'
-import SearchBar from '~/features/components/SearchBar'
-import { useAppDispatch, useAppSelector } from '~/store/hooks'
+import { useAppSelector } from '~/store/hooks'
+import { SearchBar, useQueryParamSearch } from '~/features/common'
 import {
-  selectSearchLinksWord,
-  searchLinks,
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import Links from '~/features/links/Links'
+
 
 const Root = styled.div`
   display: flex;
@@ -48,31 +46,25 @@ const ExploreLinks = (props: ExploreLinksProps) => {
   const { className } = props
 
   const [labelIdFilter] = useQueryParam('labelId', NumberParam)
-  const searchLinksWord = useAppSelector(selectSearchLinksWord)
+  const {
+    searchWordFormatted: linkSearchWordFormatted,
+    onSearch,
+    onClearSearch,
+  } = useQueryParamSearch('linkSearchWord')
   const labelsFilter = labelIdFilter ? [labelIdFilter] : null
-  const links = useAppSelector(selectLinksByLabelsFilteredBySearchWord(labelsFilter, searchLinksWord))
+  const links = useAppSelector(selectLinksByLabelsFilteredBySearchWord(labelsFilter, linkSearchWordFormatted))
   const linksIds = useMemo(
     () => links.map((link) => link.id),
     [links],
   )
 
-  const dispatch = useAppDispatch()
-  // TODO: create search hook
-  // TODO: add the search word to the query params so one can copy url with it
-  const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(searchLinks(event.target.value))
-  }, [dispatch])
-  const onClearSearch = useCallback(() => {
-    dispatch(searchLinks(''))
-  }, [dispatch])
-
   return (
     <Root className={className}>
       <LinksContainer>
         <TitleAndLinkSearchContainer>
-          <Title>Explore Links</Title>
+          <Title>Links</Title>
           <LinksSearch
-            searchWord={searchLinksWord}
+            searchWord={linkSearchWordFormatted}
             onSearch={onSearch}
             onClearSearch={onClearSearch}
           />

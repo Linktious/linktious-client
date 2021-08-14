@@ -1,12 +1,11 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import SearchBar from '~/features/components/SearchBar'
+import { SearchBar, useQueryParamSearch } from '~/features/common'
 import Boards from '~/features/boards/Boards'
 import { useAppSelector } from '~/store/hooks'
 import {
   selectBoardsFilteredBySearchWord,
 } from '~/features/boards/slice'
-import { StringParam, useQueryParam } from 'use-query-params'
 
 
 const Root = styled.div`
@@ -43,33 +42,22 @@ interface ExploreBoardsProps {
 
 const ExploreBoards = (props: ExploreBoardsProps) => {
   const { className } = props
-  const [boardSearchWord, setBoardSearchWord] = useQueryParam('boardSearchWord', StringParam)
-  const boardSearchWordFormatted = boardSearchWord || ''
+  const {
+    searchWordFormatted: boardSearchWordFormatted,
+    onSearch,
+    onClearSearch,
+  } = useQueryParamSearch('boardSearchWord')
   const boards = useAppSelector(selectBoardsFilteredBySearchWord(boardSearchWordFormatted))
   const boardsIds = useMemo(
     () => boards.map((board) => board.id),
     [boards],
   )
 
-  const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchWord = event.target.value
-    if (searchWord) {
-      setBoardSearchWord(event.target.value)
-    }
-    else {
-      setBoardSearchWord(undefined)
-    }
-  }, [])
-
-  const onClearSearch = useCallback(() => {
-    setBoardSearchWord(undefined)
-  }, [])
-
   return (
     <Root className={className}>
       <BoardsContainer>
         <TitleAndBoardSearchContainer>
-          <Title>Explore Boards</Title>
+          <Title>Boards</Title>
           <BoardsSearch
             searchWord={boardSearchWordFormatted}
             onSearch={onSearch}

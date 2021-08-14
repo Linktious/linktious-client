@@ -110,8 +110,6 @@ const Link = (props: LinkProps) => {
   if (!link) return null
 
   const labels = useAppSelector(selectLabelsByIds(link.labels))
-  console.log('link', link)
-  console.log('labels', labels)
 
   return (
     <LinkCard square={true} elevation={12}>

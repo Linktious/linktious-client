@@ -1,12 +1,11 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import SearchBar from '~/features/components/SearchBar'
+import { SearchBar, useQueryParamSearch } from '~/features/common'
 import Labels from '~/features/labels/Labels'
 import { useAppSelector } from '~/store/hooks'
 import {
   selectLabelsFilteredBySearchWord,
 } from '~/features/labels/slice'
-import { StringParam, useQueryParam } from 'use-query-params'
 
 
 const Root = styled.div`
@@ -43,33 +42,22 @@ interface ExploreLabelsProps {
 
 const ExploreLabels = (props: ExploreLabelsProps) => {
   const { className } = props
-  const [labelSearchWord, setLabelSearchWord] = useQueryParam('labelSearchWord', StringParam)
-  const labelSearchWordFormatted = labelSearchWord || ''
+  const {
+    searchWordFormatted: labelSearchWordFormatted,
+    onSearch,
+    onClearSearch,
+  } = useQueryParamSearch('labelSearchWord')
   const labels = useAppSelector(selectLabelsFilteredBySearchWord(labelSearchWordFormatted))
   const labelsIds = useMemo(
     () => labels.map((label) => label.id),
     [labels],
   )
 
-  const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchWord = event.target.value
-    if (searchWord) {
-      setLabelSearchWord(event.target.value)
-    }
-    else {
-      setLabelSearchWord(undefined)
-    }
-  }, [])
-
-  const onClearSearch = useCallback(() => {
-    setLabelSearchWord(undefined)
-  }, [])
-
   return (
     <Root className={className}>
       <LabelsContainer>
         <TitleAndLabelSearchContainer>
-          <Title>Explore Labels</Title>
+          <Title>Labels</Title>
           <LabelsSearch
             searchWord={labelSearchWordFormatted}
             onSearch={onSearch}

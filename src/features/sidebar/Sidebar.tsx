@@ -122,7 +122,7 @@ const Sidebar = () => {
   const items = [{
     route: '/boards',
     icon: <InboxIcon />,
-    description: 'Explore Boards',
+    description: 'Boards',
   }, {
     route: '/favorite-boards',
     icon: <InboxIcon />,
@@ -130,7 +130,7 @@ const Sidebar = () => {
   }, {
     route: '/links',
     icon: <InboxIcon />,
-    description: 'Explore Links',
+    description: 'Links',
   }, {
     route: '/labels',
     icon: <InboxIcon />,

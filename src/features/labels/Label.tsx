@@ -34,7 +34,6 @@ const LabelTag = (props: LabelProps) => {
   const { className, labelId } = props
   const label = useAppSelector(selectLabelById(labelId))
   if (!label) return null
-  console.log(label)
 
   return (
     <ColoredLabel
@@ -73,11 +72,15 @@ interface LabelIconDivProps {
   borderColor?: string
 }
 
-const LabelIcon = styled.div<LabelIconDivProps>`
+const LabelIcon = styled.div.attrs((props: LabelIconDivProps) => ({
+  // Setting style using attrs to optimize the render time
+  style: {
+    border: `2px solid ${props.borderColor ? props.borderColor : '#80808047'}`,
+  },
+}))<LabelIconDivProps>`
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid ${({ borderColor }) => borderColor ? `${borderColor}87` : '#80808047'};
   background: aliceblue;
   font-family: monospace;
   font-size: x-large;
@@ -112,7 +115,6 @@ const LabelCard = (props: LabelProps) => {
   if (!label) return null
 
   const numberOfRelatedLinks = useAppSelector(selectLinksByLabels([labelId])).length
-  console.log(label)
 
   return (
     <LinkRouterWithLabelFilter
