@@ -106,6 +106,7 @@ interface LinkProps {
 
 const Link = (props: LinkProps) => {
   const { linkId } = props
+
   const link = useAppSelector(selectLinkById(linkId))
   if (!link) return null
 

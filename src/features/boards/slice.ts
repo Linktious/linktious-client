@@ -6,7 +6,7 @@ import * as types from './types'
 import BoardService from './service'
 import { RootState } from '~/store/rootReducer'
 import { inCaseSensitiveSearch } from '~/features/common'
-import { selectAuthenticatedUser, selectFavoriteBoards } from '~/features/users/slice'
+import { selectFavoriteBoards } from '~/features/users/slice'
 
 
 export const fetchBoards = createAsyncThunk<types.Board[]>(
@@ -30,13 +30,11 @@ export const setBoardLabelsFilters = createAsyncThunk<types.Board, setBoardLabel
 
 interface BoardsState {
   boards: types.Board[],
-  searchLinksWord: string,
   searchLabelsWord: string,
 }
 
 const initialState = {
   boards: [],
-  searchLinksWord: '',
   searchLabelsWord: '',
 } as BoardsState
 
@@ -44,9 +42,6 @@ export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
   reducers: {
-    searchLinksInBoard(state, action: PayloadAction<string>) {
-      state.searchLinksWord = action.payload
-    },
     searchLabels(state, action: PayloadAction<string>) {
       state.searchLabelsWord = action.payload
     },
@@ -70,7 +65,7 @@ export const boardsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { searchLinksInBoard, searchLabels } = boardsSlice.actions
+export const { searchLabels } = boardsSlice.actions
 
 export default boardsSlice.reducer
 
@@ -103,8 +98,6 @@ export const selectBoardById = (boardId: number) => (state: RootState) => {
 
   return boards.find((board) => board.id === boardId)
 }
-
-export const selectSearchLinks = (state: RootState) => state.boards.searchLinksWord
 
 export const selectSearchLabels = (state: RootState) => state.boards.searchLabelsWord
 

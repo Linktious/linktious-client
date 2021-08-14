@@ -69,7 +69,7 @@ export const selectLabelsByIds = (labelsIds: number[]) => (state: RootState) => 
 }
 
 const filterLabelsBySearchWord = (labels: types.Label[], searchWord: string) =>
-  labels.filter((label) => inCaseSensitiveSearch(label.name, searchWord))
+  labels.filter((label) => inCaseSensitiveSearch(searchWord, label.name))
 
 export const selectLabelsFilteredBySearchWord = (searchWord: string) => (state: RootState) => {
   const labels = selectAllLabels(state)

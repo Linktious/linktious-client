@@ -12,11 +12,15 @@ interface ColoredLabelProps {
   readonly backgroundColor?: string
 }
 
-const ColoredLabel = styled.span<ColoredLabelProps>`
+const ColoredLabel = styled.span.attrs((props: ColoredLabelProps) => ({
+  // Setting style using attrs to optimize the render time
+  style: {
+    backgroundColor: props.backgroundColor || 'red',
+    fontSize: props.fontSize || 'medium',
+  },
+}))<ColoredLabelProps>`
   color: white;
-  background-color: ${({ backgroundColor = 'red' }) => backgroundColor};
   font-family: monospace;
-  font-size: ${({ fontSize = 'medium' }) => fontSize};
   border-radius: 4px;
   padding: 2px 4px;
   width: fit-content;
@@ -26,11 +30,11 @@ interface LabelProps {
   labelId: number
   backgroundColor?: string
   className?: string
-  key?: any
 }
 
 const LabelTag = (props: LabelProps) => {
   const { className, labelId } = props
+
   const label = useAppSelector(selectLabelById(labelId))
   if (!label) return null
 
@@ -74,7 +78,7 @@ interface LabelIconDivProps {
 const LabelIcon = styled.div.attrs((props: LabelIconDivProps) => ({
   // Setting style using attrs to optimize the render time
   style: {
-    border: `2px solid ${props.borderColor ? props.borderColor : '#80808047'}`,
+    border: `2px solid ${props.borderColor || '#80808047'}`,
   },
 }))<LabelIconDivProps>`
   width: 48px;
@@ -110,6 +114,7 @@ const LabelDescription = styled.div`
 
 const LabelCard = (props: LabelProps) => {
   const { className, labelId } = props
+
   const label = useAppSelector(selectLabelById(labelId))
   if (!label) return null
 

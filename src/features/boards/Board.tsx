@@ -6,10 +6,8 @@ import {
 } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import {
-  searchLinksInBoard,
   selectBoardById,
   selectIsFavoriteBoard,
-  selectSearchLinks,
 } from './slice'
 import {
   selectLinksByLabelsFilteredBySearchWord,
@@ -18,7 +16,7 @@ import styled from 'styled-components'
 import {
   SearchBar,
   FavoriteStar,
-  FavoriteStarProps,
+  FavoriteStarProps, useQueryParamSearch,
 } from '~/features/common'
 import { LabelTag } from '~/features/labels'
 import BoardInfo from '~/features/boards/BoardInfo'
@@ -149,26 +147,21 @@ const BoardWithLinks = (props: BoardProps) => {
   const boardId = Number(boardIdParam)
 
   const board = useAppSelector(selectBoardById(boardId))
-  const searchLinksWord = useAppSelector(selectSearchLinks)
   if (!board) return null
 
+  const {
+    searchWordFormatted: linkSearchWordFormatted,
+    onSearch,
+    onClearSearch,
+  } = useQueryParamSearch('linkSearchWord')
+
   const links = useAppSelector(
-    selectLinksByLabelsFilteredBySearchWord(board.labelsFilters, searchLinksWord),
+    selectLinksByLabelsFilteredBySearchWord(board.labelsFilters, linkSearchWordFormatted),
   )
   const linksIds = useMemo(
     () => links.map((link) => link.id),
     [links],
   )
-
-  const dispatch = useAppDispatch()
-
-  // TODO: create search hook?
-  const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(searchLinksInBoard(event.target.value))
-  }, [dispatch])
-  const onClearSearch = useCallback(() => {
-    dispatch(searchLinksInBoard(''))
-  }, [dispatch])
 
   return (
     <Root className={className}>
@@ -177,7 +170,7 @@ const BoardWithLinks = (props: BoardProps) => {
           <TitleAndSearchWrapper>
             <Title>{board.name}</Title>
             <BoardLinksSearch
-              searchWord={searchLinksWord}
+              searchWord={linkSearchWordFormatted}
               onSearch={onSearch}
               onClearSearch={onClearSearch}
             />
@@ -281,6 +274,7 @@ const BoardCard = (props: BoardCardProps) => {
 
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
+
   const numberOfLinks = useAppSelector(selectNumberOfRelatedLinks(board.labelsFilters))
 
   return (
