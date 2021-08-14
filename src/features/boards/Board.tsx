@@ -12,7 +12,6 @@ import {
   selectSearchLinks,
 } from './slice'
 import {
-  selectLinksByLabels,
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
@@ -30,6 +29,7 @@ import {
   Tooltip,
 } from '@material-ui/core'
 import { toggleUserFavoriteBoard } from '~/features/users/slice'
+import { selectNumberOfRelatedLinks } from '~/features/labels/slice'
 
 export interface BoardRouterProps extends Omit<LinkRouterProps, 'to'> {
   boardId: number
@@ -149,7 +149,7 @@ const BoardWithLinks = (props: BoardProps) => {
   const boardId = Number(boardIdParam)
 
   const board = useAppSelector(selectBoardById(boardId))
-  const searchLinksWord = useAppSelector(selectSearchLinks())
+  const searchLinksWord = useAppSelector(selectSearchLinks)
   if (!board) return null
 
   const links = useAppSelector(
@@ -281,7 +281,7 @@ const BoardCard = (props: BoardCardProps) => {
 
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
-  const numberOfLinks = useAppSelector(selectLinksByLabels(board.labelsFilters)).length
+  const numberOfLinks = useAppSelector(selectNumberOfRelatedLinks(board.labelsFilters))
 
   return (
     <Badge

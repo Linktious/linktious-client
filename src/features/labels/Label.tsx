@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useAppSelector } from '~/store/hooks'
-import { selectLabelById } from '~/features/labels/slice'
+import { selectLabelById, selectNumberOfRelatedLinks } from '~/features/labels/slice'
 import Card from '@material-ui/core/Card'
 import { LinkRouterWithLabelFilter } from '~/features/links'
-import { selectLinksByLabels } from '~/features/links/slice'
 import { Tooltip } from '@material-ui/core'
 
 
@@ -114,7 +113,7 @@ const LabelCard = (props: LabelProps) => {
   const label = useAppSelector(selectLabelById(labelId))
   if (!label) return null
 
-  const numberOfRelatedLinks = useAppSelector(selectLinksByLabels([labelId])).length
+  const numberOfRelatedLinks = useAppSelector(selectNumberOfRelatedLinks(labelId))
 
   return (
     <LinkRouterWithLabelFilter

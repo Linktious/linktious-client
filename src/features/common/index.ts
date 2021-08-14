@@ -10,3 +10,9 @@ export {
 export type {
   FavoriteStarProps,
 }
+
+export const inCaseSensitiveSearch = (searchWord: string, ...words: string[]) => {
+  const text = words.join().toLowerCase()
+
+  return text.includes(searchWord.toLowerCase())
+}

@@ -1,10 +1,12 @@
 import {
   createSlice,
-  createAsyncThunk,
+  createAsyncThunk, createSelector,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import LabelService from './service'
 import { RootState } from '~/store/rootReducer'
+import { selectLinksByLabels } from '~/features/links/slice'
+import { inCaseSensitiveSearch } from '~/features/common'
 
 
 export const fetchLabels = createAsyncThunk<types.Label[]>(
@@ -53,7 +55,29 @@ export const { } = labelsSlice.actions
 export default labelsSlice.reducer
 
 export const selectAllLabels = (state: RootState) => state.labels.labels
-export const selectLabelById = (labelId: number) => (state: RootState) => selectAllLabels(state).find((label) => label.id === labelId)
-export const selectLabelsByIds = (labelsIds: number[]) => (state: RootState) => selectAllLabels(state)
-  .filter((label) => labelsIds.includes(label.id))
-export const selectLabelsFilteredBySearchWord = (searchWord: string) => (state: RootState) => selectAllLabels(state).filter((label) => label.name.toLowerCase().includes(searchWord.toLowerCase()))
+
+export const selectLabelById = (labelId: number) => (state: RootState) => {
+  const labels = selectAllLabels(state)
+
+  return labels.find((label) => label.id === labelId)
+}
+
+export const selectLabelsByIds = (labelsIds: number[]) => (state: RootState) => {
+  const labels = selectAllLabels(state)
+
+  return labels.filter((label) => labelsIds.includes(label.id))
+}
+
+const filterLabelsBySearchWord = (labels: types.Label[], searchWord: string) =>
+  labels.filter((label) => inCaseSensitiveSearch(label.name, searchWord))
+
+export const selectLabelsFilteredBySearchWord = (searchWord: string) => (state: RootState) => {
+  const labels = selectAllLabels(state)
+
+  return filterLabelsBySearchWord(labels, searchWord)
+}
+
+export const selectNumberOfRelatedLinks = (labelsIds: number | number[]) => createSelector(
+  selectLinksByLabels([labelsIds].flat()),
+  (links) => links.length,
+)

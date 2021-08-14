@@ -15,7 +15,7 @@ import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import Card from '@material-ui/core/Card'
 import { selectLabelsFilteredBySearchWord } from '~/features/labels/slice'
 import { LabelTag } from '~/features/labels'
-import { fetchUserInfo, getUserById } from '~/features/users/slice'
+import { fetchUserInfo, selectUserById } from '~/features/users/slice'
 
 
 const SectionContainer = styled.div`
@@ -100,7 +100,7 @@ const SearchLabels = (props: SearchLabelsProps) => {
   const { className } = props
 
   const dispatch = useAppDispatch()
-  const searchLabelsWord = useAppSelector(selectSearchLabels())
+  const searchLabelsWord = useAppSelector(selectSearchLabels)
 
   const onSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(searchLabels(event.target.value))
@@ -312,8 +312,8 @@ const BoardInfo = (props: BoardInfoProps) => {
   const dispatch = useAppDispatch()
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
-  const userInfo = useAppSelector(getUserById(board.createdByUserId))
-  const searchLabelsWord = useAppSelector(selectSearchLabels())
+  const userInfo = useAppSelector(selectUserById(board.createdByUserId))
+  const searchLabelsWord = useAppSelector(selectSearchLabels)
   const labels = useAppSelector(selectLabelsFilteredBySearchWord(searchLabelsWord))
 
   useEffect(() => {

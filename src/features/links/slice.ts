@@ -5,6 +5,7 @@ import {
 import * as types from './types'
 import LinkService from './service'
 import { RootState } from '~/store/rootReducer'
+import { inCaseSensitiveSearch } from '~/features/common'
 
 
 export const fetchLinks = createAsyncThunk<types.Link[]>(
@@ -47,12 +48,32 @@ export const { } = linksSlice.actions
 
 export default linksSlice.reducer
 
+
 export const selectAllLinks = (state: RootState) => state.links.links
-export const selectLinkById = (linkId: number) => (state: RootState) => selectAllLinks(state).find((link) => link.id === linkId)
-export const selectLinksByLabels = (labelsIds: number[]) => (state: RootState) => selectAllLinks(state)
-  .filter((link) => link.labels.some((labelId) => labelsIds.includes(labelId)))
-const filterLinksBySearchWord = (links: types.Link[], searchWord: string) => links.filter((link) => link.description.toLowerCase().includes(searchWord.toLowerCase()))
-export const selectLinksFilteredBySearchWord = (searchWord: string) => (state: RootState) => filterLinksBySearchWord(selectAllLinks(state), searchWord)
+
+export const selectLinkById = (linkId: number) => (state: RootState) => {
+  const links = selectAllLinks(state)
+
+  return links.find((link) => link.id === linkId)
+}
+
+export const selectLinksByLabels = (labelsIds: number[]) => (state: RootState) => {
+  const links = selectAllLinks(state)
+
+  return links.filter((link) => {
+    return link.labels.some((labelId) => labelsIds.includes(labelId))
+  })
+}
+
+const filterLinksBySearchWord = (links: types.Link[], searchWord: string) =>
+  links.filter((link) => inCaseSensitiveSearch(searchWord, link.description, link.url))
+
+export const selectLinksFilteredBySearchWord = (searchWord: string) => (state: RootState) => {
+  const links = selectAllLinks(state)
+
+  return filterLinksBySearchWord(links, searchWord)
+}
+
 export const selectLinksByLabelsFilteredBySearchWord = (labelsIds: number[] | null, searchWord: string) =>
   (state: RootState) => {
     let links

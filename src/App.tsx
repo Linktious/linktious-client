@@ -12,7 +12,7 @@ import { userLogin } from '~/features/users'
 import { fetchBoards, BoardWithLinks, FavoriteBoards } from '~/features/boards'
 import { fetchLinks } from '~/features/links'
 import { fetchLabels } from '~/features/labels'
-import { getAuthenticatedUser } from '~/features/users/slice'
+import { selectAuthenticatedUser } from '~/features/users/slice'
 import { Sidebar } from '~/features/sidebar'
 import ExploreLinks from '~/features/links/ExploreLinks'
 import ExploreLabels from '~/features/labels/ExportLabels'
@@ -39,7 +39,7 @@ const BoardWithLayout = styled(BoardWithLinks)`
 `
 
 const Home = () => {
-  const user = useAppSelector(getAuthenticatedUser)
+  const user = useAppSelector(selectAuthenticatedUser)
   if (!user) {
     return null
   }

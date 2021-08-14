@@ -7,7 +7,7 @@ import {
   selectBoardsByIdsAndSearchWord,
 } from '~/features/boards/slice'
 import { StringParam, useQueryParam } from 'use-query-params'
-import { getAuthenticatedUser } from '~/features/users/slice'
+import { selectAuthenticatedUser } from '~/features/users/slice'
 
 
 const Root = styled.div`
@@ -46,7 +46,7 @@ const FavoriteBoards = (props: FavoriteBoardsProps) => {
   const { className } = props
   const [boardSearchWord, setBoardSearchWord] = useQueryParam('boardSearchWord', StringParam)
   const boardSearchWordFormatted = boardSearchWord || ''
-  const user = useAppSelector(getAuthenticatedUser)
+  const user = useAppSelector(selectAuthenticatedUser)
   if (!user) return null
   const boards = useAppSelector(selectBoardsByIdsAndSearchWord(user.favoriteBoards, boardSearchWordFormatted))
   const boardsIds = useMemo(

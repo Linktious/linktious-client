@@ -1,10 +1,12 @@
 import {
   createSlice,
-  createAsyncThunk, PayloadAction,
+  createAsyncThunk, PayloadAction, createSelector,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import BoardService from './service'
 import { RootState } from '~/store/rootReducer'
+import { inCaseSensitiveSearch } from '~/features/common'
+import { selectAuthenticatedUser, selectFavoriteBoards } from '~/features/users/slice'
 
 
 export const fetchBoards = createAsyncThunk<types.Board[]>(
@@ -72,14 +74,41 @@ export const { searchLinksInBoard, searchLabels } = boardsSlice.actions
 
 export default boardsSlice.reducer
 
-// TODO: use reselect
 export const selectAllBoards = (state: RootState) => state.boards.boards
-export const selectBoardsByIds = (boardIds: number[]) => (state: RootState) => selectAllBoards(state).filter((board) => boardIds.includes(board.id))
-const filterBoardsBySearchWord = (boards: types.Board[], searchWord: string) => boards.filter((board) => board.name.toLowerCase().includes(searchWord.toLowerCase()))
-export const selectBoardsFilteredBySearchWord = (searchWord: string) => (state: RootState) => filterBoardsBySearchWord(selectAllBoards(state), searchWord)
-export const selectBoardsByIdsAndSearchWord = (boardsIds: number[], searchWord: string) => (state: RootState) => filterBoardsBySearchWord(selectBoardsByIds(boardsIds)(state), searchWord)
-// TODO: use previous selector to get boards
-export const selectBoardById = (boardId: number) => (state: RootState) => state.boards.boards.find((board) => board.id === boardId)
-export const selectSearchLinks = () => (state: RootState) => state.boards.searchLinksWord
-export const selectSearchLabels = () => (state: RootState) => state.boards.searchLabelsWord
-export const selectIsFavoriteBoard = (boardId: number) => (state: RootState) => state.users.authenticatedUser ? state.users.authenticatedUser.favoriteBoards.includes(boardId) : false
+
+export const selectBoardsByIds = (boardIds: number[]) => (state: RootState) => {
+  const boards = selectAllBoards(state)
+
+  return boards.filter((board) => boardIds.includes(board.id))
+}
+
+const filterBoardsBySearchWord = (boards: types.Board[], searchWord: string) =>
+  boards.filter((board) => inCaseSensitiveSearch(searchWord, board.name))
+
+export const selectBoardsFilteredBySearchWord = (searchWord: string) => (state: RootState) => {
+  const boards = selectAllBoards(state)
+
+  return filterBoardsBySearchWord(boards, searchWord)
+}
+
+export const selectBoardsByIdsAndSearchWord = (boardsIds: number[], searchWord: string) =>
+  (state: RootState) => {
+    const boards = selectBoardsByIds(boardsIds)(state)
+
+    return filterBoardsBySearchWord(boards, searchWord)
+  }
+
+export const selectBoardById = (boardId: number) => (state: RootState) => {
+  const boards = selectAllBoards(state)
+
+  return boards.find((board) => board.id === boardId)
+}
+
+export const selectSearchLinks = (state: RootState) => state.boards.searchLinksWord
+
+export const selectSearchLabels = (state: RootState) => state.boards.searchLabelsWord
+
+export const selectIsFavoriteBoard = (boardId: number) => createSelector(
+  selectFavoriteBoards,
+  (favoriteBoards) => favoriteBoards.includes(boardId),
+)
