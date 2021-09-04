@@ -7,7 +7,7 @@ export interface BoardResponse {
   created_at: Date,
   updated_at: Date,
   created_by_user_id: number,
-  labels_filters: number[],
+  links: number[],
 }
 /* eslint-enable camelcase */
 
@@ -18,5 +18,5 @@ export interface Board {
   createdAt: Date,
   updatedAt: Date,
   createdByUserId: number,
-  labelsFilters: number[],
+  links: number[],
 }

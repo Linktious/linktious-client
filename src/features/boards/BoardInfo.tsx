@@ -6,14 +6,12 @@ import {
   searchLabels,
   selectBoardById,
   selectSearchLabels,
-  setBoardLabelsFilters,
 } from '~/features/boards/slice'
 import { Checkbox, FormControlLabel, FormGroup, IconButton, InputAdornment, InputBase } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import ClearIcon from '@material-ui/icons/Clear'
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import Card from '@material-ui/core/Card'
-import { selectLabelsFilteredBySearchWord } from '~/features/labels/slice'
 import { LabelTag } from '~/features/labels'
 import { fetchUserInfo, selectUserById } from '~/features/users/slice'
 
@@ -136,97 +134,98 @@ const SearchLabels = (props: SearchLabelsProps) => {
   )
 }
 
-const LabelsIcon = styled(LocalOfferIcon)`
-  margin-right: 8px;
-`
+// const LabelsIcon = styled(LocalOfferIcon)`
+//   margin-right: 8px;
+// `
+//
+// const BoardLabelsContent = styled.div`
+//   margin: 4px 36px 0 36px;
+// `
 
-const BoardLabelsContent = styled.div`
-  margin: 4px 36px 0 36px;
-`
+// const LabelsCard = styled(Card)`
+//   height: 400px;
+//   border-radius: 14px;
+//   background: #f4f3f35c;
+//
+//   display: flex;
+//   flex-direction: column;
+//   align-content: flex-start;
+// `
 
-const LabelsCard = styled(Card)`
-  height: 400px;
-  border-radius: 14px;
-  background: #f4f3f35c;
-  
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-`
+// const LabelsGroup = styled(FormGroup)`
+//     margin: 8px 8px 0 16px;
+// `
+//
+// const LabelCheckbox = styled(Checkbox)`
+//   // TODO: fix without using important
+//   padding: 0 !important;
+// `
+//
+// interface BoardLabelsProps {
+//   boardId: number
+//   labels: number[]
+//   boardLabels: number[]
+// }
 
-const LabelsGroup = styled(FormGroup)`
-    margin: 8px 8px 0 16px;
-`
-
-const LabelCheckbox = styled(Checkbox)`
-  // TODO: fix without using important
-  padding: 0 !important;
-`
-
-interface BoardLabelsProps {
-  boardId: number
-  labels: number[]
-  boardLabels: number[]
-}
-
-const BoardLabels = (props: BoardLabelsProps) => {
-  const { boardId, labels, boardLabels } = props
-
-  const dispatch = useAppDispatch()
-
-  const onLabelCheckboxClick = useCallback((selectedLabelId: number, event: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked } = event.target
-    let updatedLabels
-    if (checked) {
-      updatedLabels = [...boardLabels, selectedLabelId]
-    }
-    else {
-      updatedLabels = boardLabels.filter((labelId) => labelId !== selectedLabelId)
-    }
-
-    dispatch(setBoardLabelsFilters({
-      boardId,
-      labelsFilters: updatedLabels,
-    }))
-  }, [boardLabels])
-
-  return (
-    <Section
-      title="Board Labels"
-      icon={
-        <LabelsIcon />
-      }
-    >
-      <BoardLabelsContent>
-        <SearchLabels />
-        <LabelsCard square={false} elevation={2}>
-          <LabelsGroup>
-            {
-              labels.map((labelId) => (
-                <FormControlLabel
-                  key={`board-label-form-control-${labelId}`}
-                  control={
-                    <LabelCheckbox
-                      size="small"
-                      checked={boardLabels.includes(labelId)}
-                      onChange={(event) => onLabelCheckboxClick(labelId, event)}
-                    />
-                  }
-                  label={
-                    <LabelTag
-                      key={`board-label-${labelId}`}
-                      labelId={labelId}
-                    />
-                  }
-                />
-              ))
-            }
-          </LabelsGroup>
-        </LabelsCard>
-      </BoardLabelsContent>
-    </Section>
-  )
-}
+// TODO: move to another place and use to filter links by labels
+// const BoardLabels = (props: BoardLabelsProps) => {
+//   const { boardId, labels, boardLabels } = props
+//
+//   const dispatch = useAppDispatch()
+//
+//   const onLabelCheckboxClick = useCallback((selectedLabelId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+//     const { checked } = event.target
+//     let updatedLabels
+//     if (checked) {
+//       updatedLabels = [...boardLabels, selectedLabelId]
+//     }
+//     else {
+//       updatedLabels = boardLabels.filter((labelId) => labelId !== selectedLabelId)
+//     }
+//
+//     dispatch(setBoardLabelsFilters({
+//       boardId,
+//       labelsFilters: updatedLabels,
+//     }))
+//   }, [boardLabels])
+//
+//   return (
+//     <Section
+//       title="Board Labels"
+//       icon={
+//         <LabelsIcon />
+//       }
+//     >
+//       <BoardLabelsContent>
+//         <SearchLabels />
+//         <LabelsCard square={false} elevation={2}>
+//           <LabelsGroup>
+//             {
+//               labels.map((labelId) => (
+//                 <FormControlLabel
+//                   key={`board-label-form-control-${labelId}`}
+//                   control={
+//                     <LabelCheckbox
+//                       size="small"
+//                       checked={boardLabels.includes(labelId)}
+//                       onChange={(event) => onLabelCheckboxClick(labelId, event)}
+//                     />
+//                   }
+//                   label={
+//                     <LabelTag
+//                       key={`board-label-${labelId}`}
+//                       labelId={labelId}
+//                     />
+//                   }
+//                 />
+//               ))
+//             }
+//           </LabelsGroup>
+//         </LabelsCard>
+//       </BoardLabelsContent>
+//     </Section>
+//   )
+// }
 
 const AboutIcon = styled(FormatAlignLeftIcon)`
   margin-right: 8px;
@@ -312,9 +311,9 @@ const BoardInfo = (props: BoardInfoProps) => {
   const dispatch = useAppDispatch()
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
+
   const userInfo = useAppSelector(selectUserById(board.createdByUserId))
   const searchLabelsWord = useAppSelector(selectSearchLabels)
-  const labels = useAppSelector(selectLabelsFilteredBySearchWord(searchLabelsWord))
 
   useEffect(() => {
     if (userInfo === undefined) {
@@ -335,11 +334,7 @@ const BoardInfo = (props: BoardInfoProps) => {
       <Description
         description={board.description}
       />
-      <BoardLabels
-        boardId={board.id}
-        labels={labels.map((label) => label.id)}
-        boardLabels={board.labelsFilters}
-      />
+
       <About
         createdAt={board.createdAt}
         updatedAt={board.updatedAt}
