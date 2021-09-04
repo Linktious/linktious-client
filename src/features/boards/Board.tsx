@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
+import { uniq } from 'lodash'
 import {
   Link as LinkRouter,
   LinkProps as LinkRouterProps,
@@ -10,6 +11,7 @@ import {
   selectIsFavoriteBoard,
 } from './slice'
 import {
+  selectLinksByIdsFilteredBySearchWord,
   selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
@@ -27,7 +29,6 @@ import {
   Tooltip,
 } from '@material-ui/core'
 import { toggleUserFavoriteBoard } from '~/features/users/slice'
-import { selectNumberOfRelatedLinks } from '~/features/labels/slice'
 
 export interface BoardRouterProps extends Omit<LinkRouterProps, 'to'> {
   boardId: number
@@ -155,11 +156,9 @@ const BoardWithLinks = (props: BoardProps) => {
     onClearSearch,
   } = useQueryParamSearch('linkSearchWord')
 
-  const links = useAppSelector(
-    selectLinksByLabelsFilteredBySearchWord(board.labelsFilters, linkSearchWordFormatted),
-  )
-  const linksIds = useMemo(
-    () => links.map((link) => link.id),
+  const links = useAppSelector(selectLinksByIdsFilteredBySearchWord(board.links, linkSearchWordFormatted))
+  const uniqueLabelIds = useMemo(
+    () => uniq(links.map((link) => link.labels).flat()),
     [links],
   )
 
@@ -179,7 +178,7 @@ const BoardWithLinks = (props: BoardProps) => {
         </TopSection>
         <LabelsContainer>
           {
-            board.labelsFilters.map((labelId) => (
+            uniqueLabelIds.map((labelId) => (
               <LabelContainer
                 key={`label-${labelId}`}
               >
@@ -190,7 +189,7 @@ const BoardWithLinks = (props: BoardProps) => {
             ))
           }
         </LabelsContainer>
-        <Links linksIds={linksIds}/>
+        <Links linksIds={board.links}/>
       </BoardContainer>
       <BoardInfoWithLayout boardId={boardId}/>
     </Root>
@@ -268,19 +267,16 @@ interface BoardCardProps {
   className?: string
 }
 
-// TODO: link to board with links
 const BoardCard = (props: BoardCardProps) => {
   const { className, boardId } = props
 
   const board = useAppSelector(selectBoardById(boardId))
   if (!board) return null
 
-  const numberOfLinks = useAppSelector(selectNumberOfRelatedLinks(board.labelsFilters))
-
   return (
     <Badge
       showZero={true}
-      badgeContent={numberOfLinks * 100}
+      badgeContent={board.links.length * 100}
       max={999}
       color='primary'
     >

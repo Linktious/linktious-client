@@ -13,22 +13,8 @@ class BoardService {
       createdAt: board.created_at,
       updatedAt: board.updated_at,
       createdByUserId: board.created_by_user_id,
-      labelsFilters: board.labels_filters,
+      links: board.links,
     }))
-  }
-
-  async setBoardLabelsFilters(boardId: number, labelsFilters: number[]): Promise<types.Board> {
-    const board = (await ApiClient.post<types.BoardResponse>(`/boards/${boardId}/set_labels_filters`, labelsFilters)).data
-
-    return {
-      id: board.id,
-      name: board.name,
-      description: board.description,
-      createdAt: board.created_at,
-      updatedAt: board.updated_at,
-      createdByUserId: board.created_by_user_id,
-      labelsFilters: board.labels_filters,
-    }
   }
 }
 

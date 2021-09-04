@@ -38,7 +38,7 @@ export const linksSlice = createSlice({
         ...link,
         id: Number(String(link.id) + String(idx)),
       })))
-      state.links = duplicatedLinks.flat()
+      state.links = [...action.payload, ...duplicatedLinks.flat()]
     })
   },
 })
@@ -55,6 +55,12 @@ export const selectLinkById = (linkId: number) => (state: RootState) => {
   const links = selectAllLinks(state)
 
   return links.find((link) => link.id === linkId)
+}
+
+export const selectLinksByIds = (linksIds: number[]) => (state: RootState) => {
+  const links = selectAllLinks(state)
+
+  return links.filter((link) => linksIds.includes(link.id))
 }
 
 export const selectLinksByLabels = (labelsIds: number[]) => (state: RootState) => {
@@ -74,10 +80,17 @@ export const selectLinksFilteredBySearchWord = (searchWord: string) => (state: R
   return filterLinksBySearchWord(links, searchWord)
 }
 
+export const selectLinksByIdsFilteredBySearchWord = (linksIds: number[], searchWord: string) =>
+  (state: RootState) => {
+    const links = selectLinksByIds(linksIds)(state)
+
+    return filterLinksBySearchWord(links, searchWord)
+  }
+
 export const selectLinksByLabelsFilteredBySearchWord = (labelsIds: number[] | null, searchWord: string) =>
   (state: RootState) => {
     let links
-    if (labelsIds !== null ) {
+    if (labelsIds !== null) {
       links = selectLinksByLabels(labelsIds)(state)
     }
     else {
