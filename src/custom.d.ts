@@ -8,7 +8,5 @@ declare module '*.svg' {
 import 'styled-components'
 
 declare module 'styled-components' {
-  export interface DefaultTheme {
-    
-  }
+  export interface DefaultTheme {}
 }

@@ -1,5 +1,5 @@
 const path = require('path')
-const {globalVars, isDevelopment} = require('./globalVars')
+const { globalVars, isDevelopment } = require('./globalVars')
 const webpack = require('webpack')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -7,7 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 const safePostCssParser = require('postcss-safe-parser')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
-const {WebpackManifestPlugin} = require('webpack-manifest-plugin')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 
@@ -16,6 +16,7 @@ const port = process.env.PORT ?? 3000
 const publicPath = '/'
 
 const src = path.resolve(__dirname, 'src')
+const assets = path.resolve(__dirname, 'static')
 const dist = path.resolve(__dirname, 'build')
 const backendProxyURL = process.env.BACKEND_URL ?? 'http://localhost:8000/'
 
@@ -44,7 +45,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(src, 'index.html'),
-      // favicon: path.resolve(src, 'favicon.ico'),
+      favicon: path.resolve(src, 'favicon.ico'),
     }),
     new WebpackManifestPlugin({
       fileName: 'asset-manifest.json',
@@ -71,6 +72,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '~': src,
+      'assets': assets,
     },
   },
   devServer: {
@@ -81,7 +83,7 @@ module.exports = {
     hot: true,
     historyApiFallback: true, // for SPA
     proxy: {
-      '/api': {target: backendProxyURL, pathRewrite: {'^/api': ''}},
+      '/api': { target: backendProxyURL, pathRewrite: { '^/api': '' } },
     },
   },
   module: {
@@ -93,7 +95,7 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         options: {
           plugins: [
-            isDevelopment && ['react-refresh/babel', {skipEnvCheck: true}],
+            isDevelopment && ['react-refresh/babel', { skipEnvCheck: true }],
           ].filter(Boolean),
         },
       },
@@ -122,7 +124,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
-      }
+      },
     ],
   },
   optimization: {

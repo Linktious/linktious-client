@@ -1,33 +1,134 @@
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
+import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom'
+import { QueryParamProvider } from 'use-query-params'
+import { Provider as ReduxProvider } from 'react-redux'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
+import styled, { ThemeProvider } from 'styled-components'
 import store from '~/store'
-import axios from 'axios'
-import {Provider as ReduxProvider} from 'react-redux'
-import {Route, BrowserRouter, Switch} from 'react-router-dom'
-import {ThemeProvider} from 'styled-components'
-import theme, {GlobalStyle} from '~/Theme'
+import { useAppDispatch, useAppSelector } from '~/store/hooks'
+import theme, { GlobalStyle } from '~/Theme'
+import { userLogin } from '~/features/users'
+import { fetchBoards, BoardWithLinks, FavoriteBoards } from '~/features/boards'
+import { fetchLinks } from '~/features/links'
+import { fetchLabels } from '~/features/labels'
+import { selectAuthenticatedUser } from '~/features/users/slice'
+import { Sidebar } from '~/features/sidebar'
+import ExploreLinks from '~/features/links/ExploreLinks'
+import ExploreLabels from '~/features/labels/ExportLabels'
+import ExploreBoards from './features/boards/ExploreBoards'
 
+
+const Root = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+`
+
+const Content = styled.div`
+  width: 100%;
+  flex: 1;
+  display: flex;
+  margin-left: 8px;
+`
+
+const BoardWithLayout = styled(BoardWithLinks)`
+  flex: 3;
+`
+
+const Home = () => {
+  const user = useAppSelector(selectAuthenticatedUser)
+  if (!user) {
+    return null
+  }
+  else if (user.mainBoardId >= 0) {
+    return (
+      <Redirect to={`/board/${user.mainBoardId}`} />
+    )
+  }
+  else {
+    return (
+      <Redirect to="/boards" />
+    )
+  }
+}
 
 const App = () => {
+  const dispatch = useAppDispatch()
+  const [loading, setLoading] = useState<boolean>(true)
+
+  const fetchData = async () => {
+    return await Promise.all([
+      dispatch(userLogin({
+        email: 'user@email.com',
+        password: '12345678',
+      })),
+      dispatch(fetchBoards()),
+      dispatch(fetchLinks()),
+      dispatch(fetchLabels()),
+    ])
+  }
+
   useEffect(() => {
-    axios.get('/api/')
-  }, [])
+    setLoading(true)
+    fetchData().then(() => {
+      setLoading(false)
+    })
+  }, [dispatch])
+
+  if (loading) {
+    return (
+      <div>Loading....</div>
+    )
+  }
+
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/" render={() => <div>render</div>}/>
-      </Switch>
+      <QueryParamProvider ReactRouterRoute={Route}>
+        <Sidebar />
+        <Content>
+          <Switch>
+            <Route path="/board/:boardId">
+              <BoardWithLayout/>
+            </Route>
+            <Route path="/links">
+              <ExploreLinks />
+            </Route>
+            <Route path="/boards/">
+              <ExploreBoards />
+            </Route>
+            <Route path="/favorite-boards/">
+              <FavoriteBoards />
+            </Route>
+            <Route path="/labels/">
+              <ExploreLabels />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </Content>
+      </QueryParamProvider>
     </BrowserRouter>
   )
 }
 
 
 const ProvidedApp = () => (
-  <ThemeProvider theme={theme}>
-    <ReduxProvider store={store}>
-      <GlobalStyle/>
-      <App/>
-    </ReduxProvider>
-  </ThemeProvider>
+  <Root>
+    <MuiThemeProvider theme={theme}>
+      <CssBaseline/>
+      <ThemeProvider theme={theme}>
+        <ReduxProvider store={store}>
+          <GlobalStyle/>
+          <App/>
+        </ReduxProvider>
+      </ThemeProvider>
+    </MuiThemeProvider>
+  </Root>
+
 )
 
 
