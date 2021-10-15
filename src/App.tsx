@@ -5,6 +5,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
 import styled, { ThemeProvider } from 'styled-components'
+import { SnackbarProvider } from 'notistack'
 import store from '~/store'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import theme, { GlobalStyle } from '~/Theme'
@@ -121,10 +122,12 @@ const ProvidedApp = () => (
     <MuiThemeProvider theme={theme}>
       <CssBaseline/>
       <ThemeProvider theme={theme}>
-        <ReduxProvider store={store}>
-          <GlobalStyle/>
-          <App/>
-        </ReduxProvider>
+        <SnackbarProvider maxSnack={3}>
+          <ReduxProvider store={store}>
+            <GlobalStyle/>
+            <App/>
+          </ReduxProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </MuiThemeProvider>
   </Root>

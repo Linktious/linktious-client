@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
+import { useSnackbar } from 'notistack'
 import { uniq } from 'lodash'
 import {
   Link as LinkRouter,
@@ -12,7 +13,6 @@ import {
 } from './slice'
 import {
   selectLinksByIdsFilteredBySearchWord,
-  selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
 import {
@@ -61,11 +61,15 @@ interface BoardFavoriteStarProps extends Omit<FavoriteStarProps, 'checked'> {
 
 const BoardFavoriteStar = (props: BoardFavoriteStarProps) => {
   const { className, boardId, ...favoriteStarProps } = props
+  const { enqueueSnackbar } = useSnackbar()
   const isFavoriteBoard = useAppSelector(selectIsFavoriteBoard(boardId))
 
   const dispatch = useAppDispatch()
   const onFavoriteStarClick = useCallback(
-    () => dispatch(toggleUserFavoriteBoard(boardId)),
+    async () => {
+      await dispatch(toggleUserFavoriteBoard(boardId))
+      enqueueSnackbar('hey!')
+    },
     [boardId],
   )
 
