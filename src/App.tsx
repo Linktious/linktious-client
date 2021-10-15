@@ -18,6 +18,7 @@ import { Sidebar } from '~/features/sidebar'
 import ExploreLinks from '~/features/links/ExploreLinks'
 import ExploreLabels from '~/features/labels/ExportLabels'
 import ExploreBoards from './features/boards/ExploreBoards'
+import useSnackbarNotifier from '~/features/snackbar/hooks'
 
 
 const Root = styled.div`
@@ -57,6 +58,7 @@ const Home = () => {
 }
 
 const App = () => {
+  useSnackbarNotifier()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -122,7 +124,13 @@ const ProvidedApp = () => (
     <MuiThemeProvider theme={theme}>
       <CssBaseline/>
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
           <ReduxProvider store={store}>
             <GlobalStyle/>
             <App/>

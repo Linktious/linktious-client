@@ -4,7 +4,7 @@ import {
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import LabelService from './service'
-import { RootState } from '~/store/rootReducer'
+import { RootState } from '~/store'
 import { selectLinksByLabels } from '~/features/links/slice'
 import { inCaseSensitiveSearch } from '~/features/common'
 

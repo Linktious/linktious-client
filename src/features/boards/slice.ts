@@ -4,7 +4,7 @@ import {
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import BoardService from './service'
-import { RootState } from '~/store/rootReducer'
+import { RootState } from '~/store'
 import { inCaseSensitiveSearch } from '~/features/common'
 import { selectFavoriteBoards } from '~/features/users/slice'
 
