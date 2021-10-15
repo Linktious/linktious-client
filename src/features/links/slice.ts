@@ -1,10 +1,10 @@
 import {
   createSlice,
-  createAsyncThunk, PayloadAction,
+  createAsyncThunk,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import LinkService from './service'
-import { RootState } from '~/store/rootReducer'
+import { RootState } from '~/store'
 import { inCaseSensitiveSearch } from '~/features/common'
 
 

@@ -5,6 +5,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
 import styled, { ThemeProvider } from 'styled-components'
+import { SnackbarProvider } from 'notistack'
 import store from '~/store'
 import { useAppDispatch, useAppSelector } from '~/store/hooks'
 import theme, { GlobalStyle } from '~/Theme'
@@ -17,6 +18,7 @@ import { Sidebar } from '~/features/sidebar'
 import ExploreLinks from '~/features/links/ExploreLinks'
 import ExploreLabels from '~/features/labels/ExportLabels'
 import ExploreBoards from './features/boards/ExploreBoards'
+import useSnackbarNotifier from '~/features/snackbar/hooks'
 
 
 const Root = styled.div`
@@ -56,6 +58,7 @@ const Home = () => {
 }
 
 const App = () => {
+  useSnackbarNotifier()
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -121,10 +124,18 @@ const ProvidedApp = () => (
     <MuiThemeProvider theme={theme}>
       <CssBaseline/>
       <ThemeProvider theme={theme}>
-        <ReduxProvider store={store}>
-          <GlobalStyle/>
-          <App/>
-        </ReduxProvider>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          <ReduxProvider store={store}>
+            <GlobalStyle/>
+            <App/>
+          </ReduxProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </MuiThemeProvider>
   </Root>

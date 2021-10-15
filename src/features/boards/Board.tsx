@@ -12,7 +12,6 @@ import {
 } from './slice'
 import {
   selectLinksByIdsFilteredBySearchWord,
-  selectLinksByLabelsFilteredBySearchWord,
 } from '~/features/links/slice'
 import styled from 'styled-components'
 import {
@@ -29,6 +28,7 @@ import {
   Tooltip,
 } from '@material-ui/core'
 import { toggleUserFavoriteBoard } from '~/features/users/slice'
+import { openSuccessSnackbar } from '~/features/snackbar/slice'
 
 export interface BoardRouterProps extends Omit<LinkRouterProps, 'to'> {
   boardId: number
@@ -65,7 +65,19 @@ const BoardFavoriteStar = (props: BoardFavoriteStarProps) => {
 
   const dispatch = useAppDispatch()
   const onFavoriteStarClick = useCallback(
-    () => dispatch(toggleUserFavoriteBoard(boardId)),
+    async () => {
+      const user = await dispatch(toggleUserFavoriteBoard(boardId)).unwrap()
+      if (user.favoriteBoards.includes(boardId)) {
+        dispatch(openSuccessSnackbar({
+          message: 'Added board to favorites',
+        }))
+      }
+      else {
+        dispatch(openSuccessSnackbar({
+          message: 'Removed board from favorites',
+        }))
+      }
+    },
     [boardId],
   )
 
@@ -189,7 +201,7 @@ const BoardWithLinks = (props: BoardProps) => {
             ))
           }
         </LabelsContainer>
-        <Links linksIds={board.links}/>
+        <Links linksIds={links.map((link) => link.id)}/>
       </BoardContainer>
       <BoardInfoWithLayout boardId={boardId}/>
     </Root>

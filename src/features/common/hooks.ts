@@ -9,8 +9,7 @@ const useQueryParamSearch = (name: string) => {
     const searchWord = event.target.value
     if (searchWord) {
       setSearchWord(event.target.value)
-    }
-    else {
+    } else {
       setSearchWord(undefined)
     }
   }, [])
@@ -28,6 +27,7 @@ const useQueryParamSearch = (name: string) => {
     onClearSearch,
   }
 }
+
 
 export {
   useQueryParamSearch,

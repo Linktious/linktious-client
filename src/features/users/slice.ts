@@ -1,10 +1,10 @@
 import {
   createSlice,
-  createAsyncThunk, PayloadAction,
+  createAsyncThunk,
 } from '@reduxjs/toolkit'
 import * as types from './types'
 import UserService from './service'
-import { RootState } from '~/store/rootReducer'
+import { RootState } from '~/store'
 
 
 export const userLogin = createAsyncThunk<types.User, types.UserCredentials, { state: RootState }>(
@@ -42,7 +42,7 @@ export const setUserFavoriteBoards = createAsyncThunk<types.User, number[], { st
 
 export const toggleUserFavoriteBoard = createAsyncThunk<types.User, number, { state: RootState, rejectValue: string }>(
   'users/toggleUserFavoriteBoard',
-  async (boardId, { getState, rejectWithValue }) => {
+  async (boardId: number, { getState, rejectWithValue }) => {
     const authenticatedUser = getState().users.authenticatedUser
     if (authenticatedUser === null) {
       return rejectWithValue('User is not authenticated')
