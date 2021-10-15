@@ -3,12 +3,12 @@ import { OptionsObject, SnackbarKey, SnackbarMessage } from 'notistack'
 
 export interface EnqueueMessage {
   message: SnackbarMessage
-  options?: OptionsObject | undefined
+  options?: OptionsObject
 }
 
 export interface Notification {
   key: SnackbarKey
   message: SnackbarMessage
-  options?: OptionsObject | undefined
+  options?: OptionsObject
   dismissed: boolean
 }
