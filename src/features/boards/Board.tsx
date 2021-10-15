@@ -222,7 +222,8 @@ const BoardNameTooltipTitle = styled.div`
 `
 
 const BoardName = styled.div`
-  border: 2px solid #80808047;
+  border-top: 2px solid #80808047;
+  border-bottom: 2px solid #80808047;
   background: aliceblue;
   font-family: monospace;
   font-size: x-large;
